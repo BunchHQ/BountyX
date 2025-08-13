@@ -1,3 +1,7 @@
+import BottomNavigationBar, {
+  type BottomNavigationBarOptions,
+} from "@/components/BottomNavigationBar"
+import { ThemeProvider } from "@/components/theme-provider"
 import "@/styles/globals.css"
 
 import type { Metadata } from "next"
@@ -26,10 +30,25 @@ const ibmPlexMono = IBM_Plex_Mono({
   weight: ["400", "700"],
 })
 
+const navigationOptions: Array<BottomNavigationBarOptions> = [
+  { label: "Questboard", value: "/", icon: "📜" },
+  { label: "Profile", value: "/profile", icon: "🧑‍🦱" },
+  { label: "Hall of Fame", value: "/hall-of-fame", icon: "🏆" },
+]
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${libre.variable} ${lora.variable} ${ibmPlexMono.variable}`}>
-      <body>{children}</body>
+    <html
+      lang="en"
+      className={`${libre.variable} ${lora.variable} ${ibmPlexMono.variable}`}
+      suppressHydrationWarning
+    >
+      <body>
+        <ThemeProvider attribute="class" defaultTheme="system" enableColorScheme enableSystem>
+          <div className="h-full min-h-svh w-full">{children}</div>
+          <BottomNavigationBar options={navigationOptions} />
+        </ThemeProvider>
+      </body>
     </html>
   )
 }
