@@ -1,6 +1,8 @@
 import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
 
+const PUBLIC_PATHS = ["/login", "/signup", "/auth/confirm"]
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
@@ -30,10 +32,14 @@ export async function updateSession(request: NextRequest) {
   // refreshing the auth token
   const user = await supabase.auth.getUser()
 
-  // don't allow access to /dashboard for unauthenticated users
-  // if (request.nextUrl.pathname.startsWith("/") && user.error) {
-  //   return NextResponse.redirect(new URL("/login", request.url))
-  // }
+  // don't allow access to / for unauthenticated users expect for PUBLIC_PATHS
+  if (
+    request.nextUrl.pathname.startsWith("/") &&
+    !PUBLIC_PATHS.includes(request.nextUrl.pathname) &&
+    user.error
+  ) {
+    return NextResponse.redirect(new URL("/login", request.url))
+  }
 
   return supabaseResponse
 }

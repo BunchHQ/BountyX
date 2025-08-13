@@ -38,7 +38,7 @@ export default function BottomNavigationBar({
             onClick={() => setSelected(option.value)}
           >
             <Link
-              href={"#"}
+              href={option.value}
               className={`flex h-auto w-min flex-col items-center justify-center px-2 py-2`}
             >
               <span className={`${selected === option.value && "scale-135 transition-transform"}`}>

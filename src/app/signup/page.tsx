@@ -1,5 +1,4 @@
-import getUser from "@/utils/supabase/server"
-import { redirect } from "next/navigation"
+import SignupForm from "@/components/auth/SignupForm"
 import {
   Card,
   CardContent,
@@ -8,10 +7,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import LoginForm from "@/components/auth/LoginForm"
+import getUser from "@/utils/supabase/server"
 import Link from "next/link"
+import { redirect } from "next/navigation"
 
-export default async function LoginPage() {
+export default async function SignupPage() {
   const user = await getUser()
 
   if (user) {
@@ -19,23 +19,23 @@ export default async function LoginPage() {
   }
 
   return (
-    <Card className="m-auto w-full max-w-md">
+    <Card className="m-auto w-full max-w-2xl">
       <CardHeader>
         <CardTitle className="font-title text-center text-2xl font-bold tracking-tight">
-          Log in to your Account
+          Create your Account
         </CardTitle>
-        <CardDescription className="text-center">
-          Enter your credentials below to log in
+        <CardDescription className="text-muted-foreground text-center">
+          Enter your information to get started
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <LoginForm />
+      <CardContent>
+        <SignupForm />
       </CardContent>
       <CardFooter className="flex flex-col space-y-4">
         <div className="text-center text-sm">
-          Don't have an account?{" "}
-          <Link href="/signup" className="text-primary font-medium">
-            Sign up
+          Already have an account?{" "}
+          <Link href="/login" className="text-primary font-medium">
+            Log in
           </Link>
         </div>
       </CardFooter>

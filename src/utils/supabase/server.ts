@@ -29,3 +29,14 @@ export async function createClient() {
     },
   )
 }
+
+export default async function getUser() {
+  const { auth } = await createClient()
+  const userObject = await auth.getUser()
+
+  if (userObject.error) {
+    return null
+  }
+
+  return userObject.data.user
+}

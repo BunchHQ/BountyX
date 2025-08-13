@@ -1,7 +1,9 @@
 import BottomNavigationBar, {
   type BottomNavigationBarOptions,
 } from "@/components/BottomNavigationBar"
+import Header from "@/components/Navbar"
 import { ThemeProvider } from "@/components/theme-provider"
+import { Toaster } from "@/components/ui/sonner"
 import "@/styles/globals.css"
 
 import type { Metadata } from "next"
@@ -45,8 +47,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     >
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableColorScheme enableSystem>
-          <div className="h-full min-h-svh w-full">{children}</div>
+          <Header />
+          <div className="mx-auto h-full min-h-svh w-full max-w-5xl px-8 py-16">{children}</div>
           <BottomNavigationBar options={navigationOptions} />
+          <Toaster position={"top-center"} richColors />
         </ThemeProvider>
       </body>
     </html>

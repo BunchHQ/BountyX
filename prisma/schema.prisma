@@ -11,11 +11,67 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+enum Item {
+  // books, copies, pen pencils etc
+  STATIONERY
+  // Medicine
+  MEDICINE
+  // Fast food
+  FOOD
+  // Movie tickets, railway tickets
+  TICKETS
+  // Drinking Water
+  PURIFIED_WATER
+  // Fruits/Vegetables
+  GROCERY
+  // Auto
+  TRANSPORT
+  // Other
+  OTHER
+}
 
-  @@index([name])
+enum QuestStatus {
+  // Just posted, open for claims
+  POSTED
+  // Claimed by someone
+  CLAIMED
+  // Marked completed by poster, Quest done
+  COMPLETED
+  // Cancelled by poster or expired
+  CANCELLED
+}
+
+model User {
+  id    String @id @default(uuid())
+  email String @unique @db.VarChar(255)
+  name  String @db.VarChar(100)
+  phone String @db.VarChar(12)
+
+  // Quests created by the user
+  postedQuests Quest[] @relation("PostedQuests")
+
+  // Quests claimed by the user
+  claimedQuests Quest[] @relation("ClaimedQuests")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model Quest {
+  id          String      @id @default(uuid())
+  item        Item
+  details     String?     @db.Text
+  reward      Int? // TIP in INR, optional
+  destination String?     @db.VarChar(255) // Where to deliver the item
+  deadline    DateTime?
+  status      QuestStatus @default(POSTED)
+
+  poster   User?   @relation("PostedQuests", fields: [posterId], references: [id])
+  posterId String?
+
+  claimer   User?   @relation("ClaimedQuests", fields: [claimerId], references: [id])
+  claimerId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
