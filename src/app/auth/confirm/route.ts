@@ -1,13 +1,15 @@
+import { createClient } from "@/utils/supabase/server"
 import { type EmailOtpType } from "@supabase/supabase-js"
 import { type NextRequest, NextResponse } from "next/server"
-import { createClient } from "@/utils/supabase/server"
+
+const REDIERCT_AFTER_SIGNUP = "/"
 
 // Creating a handler to a GET request to route /auth/confirm
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const token_hash = searchParams.get("token_hash")
   const type = searchParams.get("type") as EmailOtpType | null
-  const next = "/"
+  const next = REDIERCT_AFTER_SIGNUP
 
   // Create redirect link without the secret token
   const redirectTo = request.nextUrl.clone()

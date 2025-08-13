@@ -28,7 +28,12 @@ export async function updateSession(request: NextRequest) {
   )
 
   // refreshing the auth token
-  await supabase.auth.getUser()
+  const user = await supabase.auth.getUser()
+
+  // don't allow access to /dashboard for unauthenticated users
+  if (request.nextUrl.pathname.startsWith("/") && user.error) {
+    return NextResponse.redirect(new URL("/login", request.url))
+  }
 
   return supabaseResponse
 }
