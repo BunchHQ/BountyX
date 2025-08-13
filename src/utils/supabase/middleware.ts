@@ -31,9 +31,9 @@ export async function updateSession(request: NextRequest) {
   const user = await supabase.auth.getUser()
 
   // don't allow access to /dashboard for unauthenticated users
-  if (request.nextUrl.pathname.startsWith("/") && user.error) {
-    return NextResponse.redirect(new URL("/login", request.url))
-  }
+  // if (request.nextUrl.pathname.startsWith("/") && user.error) {
+  //   return NextResponse.redirect(new URL("/login", request.url))
+  // }
 
   return supabaseResponse
 }
