@@ -50,7 +50,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <Header />
           <div className="mx-auto h-full min-h-svh w-full max-w-5xl px-8 py-16">{children}</div>
           <BottomNavigationBar options={navigationOptions} />
-          <Toaster position={"top-center"} richColors />
+          <Toaster position={"top-center"} />
         </ThemeProvider>
       </body>
     </html>
