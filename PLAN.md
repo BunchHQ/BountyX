@@ -1,5 +1,10 @@
 # Plan for the App
 
-1. Login/Signup
-2. List Requests
-3. Add request
+[x] Login/Signup
+[x] List Quests
+[x] Add quest
+
+### To Add
+
+[ ] expected price
+[ ] claimedAt

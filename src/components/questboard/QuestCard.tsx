@@ -1,4 +1,6 @@
-import { QuestStatus, type Quest } from "@prisma/client"
+"use client"
+
+import { QuestStatus, type Quest, type User } from "@prisma/client"
 import {
   Card,
   CardAction,
@@ -10,7 +12,7 @@ import {
 } from "@/components/ui/card"
 import { Button } from "../ui/button"
 
-export default function QuestCard({ quest }: { quest: Quest }) {
+export default function QuestCard({ quest, user }: { quest: Quest; user: User }) {
   return (
     <Card>
       <CardHeader>
@@ -38,16 +40,14 @@ export default function QuestCard({ quest }: { quest: Quest }) {
           )}
           {quest.deadline && (
             <p className="text-sm">
-              <span className="font-semibold">Deadline:</span> {quest.deadline.toLocaleDateString()}
+              <span className="font-semibold">Deadline:</span> {quest.deadline.toLocaleString()}
             </p>
           )}
         </div>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <p className="text-muted-foreground text-sm">
-          Posted {quest.createdAt.toLocaleDateString()}
-        </p>
-        {quest.status === "POSTED" && <Button>Accept Quest</Button>}
+        <p className="text-muted-foreground text-sm">Posted {quest.createdAt.toLocaleString()}</p>
+        {quest.status === "POSTED" && quest.posterId !== user.id && <Button>Accept Quest</Button>}
       </CardFooter>
     </Card>
   )

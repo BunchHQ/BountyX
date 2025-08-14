@@ -5,6 +5,7 @@ import Header from "@/components/Navbar"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/sonner"
 import "@/styles/globals.css"
+import { ScrollTextIcon, TrophyIcon, UserIcon } from "lucide-react"
 
 import type { Metadata } from "next"
 import { IBM_Plex_Mono, Libre_Baskerville, Lora } from "next/font/google"
@@ -33,9 +34,9 @@ const ibmPlexMono = IBM_Plex_Mono({
 })
 
 const navigationOptions: Array<BottomNavigationBarOptions> = [
-  { label: "Questboard", value: "/", icon: "📜" },
-  { label: "Profile", value: "/profile", icon: "🧑‍🦱" },
-  { label: "Hall of Fame", value: "/hall-of-fame", icon: "🏆" },
+  { label: "Questboard", value: "/", icon: <ScrollTextIcon /> },
+  { label: "Profile", value: "/profile", icon: <UserIcon /> },
+  { label: "Hall of Fame", value: "/hall-of-fame", icon: <TrophyIcon /> },
 ]
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

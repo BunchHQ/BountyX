@@ -41,10 +41,14 @@ export default function BottomNavigationBar({
               href={option.value}
               className={`flex h-auto w-min flex-col items-center justify-center px-2 py-2`}
             >
-              <span className={`${selected === option.value && "scale-135 transition-transform"}`}>
+              <span
+                className={`${selected === option.value && "text-primary scale-135 transition-transform"}`}
+              >
                 {option.icon}
               </span>
-              <span className={`${selected === option.value ? "font-bold underline" : ""}`}>
+              <span
+                className={`${selected === option.value ? "text-primary font-bold underline" : ""}`}
+              >
                 {option.label}
               </span>
             </Link>
