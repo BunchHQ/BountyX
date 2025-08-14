@@ -1,5 +1,6 @@
 "use client"
 
+import { createBounty } from "@/actions/bounty"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -10,8 +11,9 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import type { BountyCreateType } from "@/lib/types"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Item, QuestStatus, type Quest } from "@prisma/client"
+import { BountyStatus, Item, type Bounty } from "@prisma/client"
 import { Loader2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useTransition } from "react"
@@ -20,8 +22,6 @@ import { toast } from "sonner"
 import { z } from "zod"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { Textarea } from "../ui/textarea"
-import { createQuest } from "@/actions/quest"
-import type { QuestCreateType } from "@/lib/types"
 
 interface Props {
   userId: string
@@ -30,7 +30,7 @@ interface Props {
 const rewardChoicesInINR = [0, 5, 10, 20, 50]
 const deadlineChoicesInMinutes = [5, 10, 20, 30, 60, 120, 300]
 
-const questSchema = z.object({
+const bountySchema = z.object({
   item: z.enum(Item, { error: "Please select an item" }),
   details: z.string().optional(),
   reward: z
@@ -42,14 +42,14 @@ const questSchema = z.object({
     .refine(val => Number.parseInt(val) > 0, { message: "Please enter a valid deadline" }),
 })
 
-type QuestFormValues = z.infer<typeof questSchema>
+type BountyFormValues = z.infer<typeof bountySchema>
 
-export default function AddNewQuestForm({ userId }: Props) {
+export default function AddNewBountyForm({ userId }: Props) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
 
-  const form = useForm<QuestFormValues>({
-    resolver: zodResolver(questSchema),
+  const form = useForm<BountyFormValues>({
+    resolver: zodResolver(bountySchema),
     defaultValues: {
       item: undefined,
       destination: "",
@@ -58,25 +58,25 @@ export default function AddNewQuestForm({ userId }: Props) {
     },
   })
 
-  function onSubmit(values: QuestFormValues) {
-    const questData: QuestCreateType = {
+  function onSubmit(values: BountyFormValues) {
+    const bountyData: BountyCreateType = {
       item: values.item,
       details: values.details || "",
       reward: Number.parseInt(values.reward),
       destination: values.destination,
       deadline: new Date(Date.now() + Number.parseInt(values.deadline) * 60 * 1000),
       posterId: userId,
-      status: QuestStatus.POSTED,
+      status: BountyStatus.OFFERED,
     }
 
     startTransition(async () => {
       try {
-        const quest: Quest = await createQuest(questData)
+        const bounty: Bounty = await createBounty(bountyData)
         form.reset()
 
-        toast.success("Quest posted", {
+        toast.success("Bounty offered", {
           description: "Bounty has been offered successfully.",
-          action: <Button onClick={() => router.push(`/bounty/${quest.id}`)}>View</Button>,
+          action: <Button onClick={() => router.push(`/bounty/${bounty.id}`)}>View</Button>,
         })
       } catch (error) {
         console.error("Error posting bounty:", error)

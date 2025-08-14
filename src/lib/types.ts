@@ -1,6 +1,9 @@
-import type { Quest, User } from "@prisma/client"
+import type { Bounty, User } from "@prisma/client"
 
-export type QuestCreateType = Omit<Quest, "id" | "createdAt" | "updatedAt" | "claimerId">
-export type QuestWithPoster = Quest & { poster: User }
-export type QuestWithClaimer = QuestWithPoster & { claimer: User | null }
-export type QuestWithPosterAndClaimer = QuestWithPoster & QuestWithClaimer
+export type BountyCreateType = Omit<
+  Bounty,
+  "id" | "createdAt" | "updatedAt" | "claimerId" | "claimedAt"
+>
+export type BountyWithPoster = Bounty & { poster: User }
+export type BountyWithClaimer = BountyWithPoster & { claimer: User | null }
+export type BountyWithPosterAndClaimer = BountyWithPoster & BountyWithClaimer

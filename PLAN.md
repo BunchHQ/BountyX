@@ -6,5 +6,4 @@
 
 ### To Add
 
-[ ] expected price
-[ ] claimedAt
+[x] claimedAt

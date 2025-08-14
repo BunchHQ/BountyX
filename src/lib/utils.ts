@@ -1,4 +1,4 @@
-import { Item, QuestStatus } from "@prisma/client"
+import { Item, BountyStatus } from "@prisma/client"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -35,15 +35,15 @@ export const formatBountyItem = (item: Item): string => {
   }
 }
 
-export const formatBountyStatus = (status: QuestStatus): string => {
+export const formatBountyStatus = (status: BountyStatus): string => {
   switch (status) {
-    case QuestStatus.POSTED:
-      return "Posted"
-    case QuestStatus.CLAIMED:
+    case BountyStatus.OFFERED:
+      return "Offered"
+    case BountyStatus.CLAIMED:
       return "Claimed"
-    case QuestStatus.COMPLETED:
+    case BountyStatus.COMPLETED:
       return "Completed"
-    case QuestStatus.CANCELLED:
+    case BountyStatus.CANCELLED:
       return "Cancelled"
     default:
       return "Unknown Status"

@@ -1,10 +1,10 @@
-import { type Quest } from "@prisma/client"
-import QuestCard from "./QuestCard"
-import { getAllQuests } from "@/actions/quest"
+import { type Bounty } from "@prisma/client"
+import BountyCard from "./BountyCard"
+import { getAllBounties } from "@/actions/bounty"
 import getUser from "@/utils/supabase/server"
 import { getUserById } from "@/actions/user"
 
-export default async function QuestsList() {
+export default async function BountiesList() {
   const authUser = await getUser()
 
   if (!authUser) {
@@ -25,9 +25,9 @@ export default async function QuestsList() {
     )
   }
 
-  const allQuests: Array<Quest> = await getAllQuests()
+  const allBounties: Array<Bounty> = await getAllBounties()
 
-  if (allQuests.length === 0) {
+  if (allBounties.length === 0) {
     return (
       <div className="grid grid-cols-1 gap-4">
         <p>No bounties found.</p>
@@ -37,8 +37,8 @@ export default async function QuestsList() {
 
   return (
     <div className="grid grid-cols-1 gap-4">
-      {allQuests.map(quest => (
-        <QuestCard quest={quest} key={quest.id} user={user} />
+      {allBounties.map(bounty => (
+        <BountyCard bounty={bounty} key={bounty.id} user={user} />
       ))}
     </div>
   )

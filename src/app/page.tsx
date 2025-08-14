@@ -1,6 +1,6 @@
 import { getUserById } from "@/actions/user"
-import AddNewQuestForm from "@/components/questboard/AddNewQuestForm"
-import QuestsList from "@/components/questboard/QuestsList"
+import AddNewBountyForm from "@/components/bountyboard/AddNewBountyForm"
+import BountiesList from "@/components/bountyboard/BountiesList"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -18,7 +18,7 @@ import { PlusIcon } from "lucide-react"
 import { redirect } from "next/navigation"
 import { Suspense } from "react"
 
-function QuestsLoading() {
+function BountiesLoading() {
   return (
     <div className="grid grid-cols-1 gap-4">
       <Skeleton className="h-10 w-full" />
@@ -58,7 +58,7 @@ export default async function HomePage() {
                 <DialogTitle>Offer a Bounty</DialogTitle>
                 <DialogDescription>Add a new Bounty to the public board.</DialogDescription>
               </DialogHeader>
-              <AddNewQuestForm userId={user.id} />
+              <AddNewBountyForm userId={user.id} />
               <DialogFooter>
                 <p className="text-muted-foreground text-xs">
                   Remember: We do NOT guarantee any deadlines or rewards. Both are the sole
@@ -69,8 +69,8 @@ export default async function HomePage() {
           </Dialog>
         </div>
         <p className="text-muted-foreground">Currently active bounties</p>
-        <Suspense fallback={<QuestsLoading />}>
-          <QuestsList />
+        <Suspense fallback={<BountiesLoading />}>
+          <BountiesList />
         </Suspense>
       </div>
     </main>

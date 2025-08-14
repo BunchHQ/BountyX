@@ -30,12 +30,12 @@ enum Item {
   OTHER
 }
 
-enum QuestStatus {
-  // Just posted, open for claims
-  POSTED
+enum BountyStatus {
+  // Just offered, open for claims
+  OFFERED
   // Claimed by someone
   CLAIMED
-  // Marked completed by poster, Quest done
+  // Marked completed by poster, Bounty done
   COMPLETED
   // Cancelled by poster or expired
   CANCELLED
@@ -47,30 +47,31 @@ model User {
   name  String @db.VarChar(100)
   phone String @db.VarChar(12)
 
-  // Quests created by the user
-  postedQuests Quest[] @relation("PostedQuests")
+  // Bounties created by the user
+  postedBounties Bounty[] @relation("PostedBounties")
 
-  // Quests claimed by the user
-  claimedQuests Quest[] @relation("ClaimedQuests")
+  // Bounties claimed by the user
+  claimedBounties Bounty[] @relation("ClaimedBounties")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 }
 
-model Quest {
-  id          String      @id @default(uuid())
+model Bounty {
+  id          String       @id @default(uuid())
   item        Item
-  details     String?     @db.Text
+  details     String?      @db.Text
   reward      Int? // TIP in INR, optional
-  destination String?     @db.VarChar(255) // Where to deliver the item
+  destination String?      @db.VarChar(255) // Where to deliver the item
   deadline    DateTime?
-  status      QuestStatus @default(POSTED)
+  status      BountyStatus @default(OFFERED)
 
-  poster   User?   @relation("PostedQuests", fields: [posterId], references: [id])
+  poster   User?   @relation("PostedBounties", fields: [posterId], references: [id])
   posterId String?
 
-  claimer   User?   @relation("ClaimedQuests", fields: [claimerId], references: [id])
+  claimer   User?     @relation("ClaimedBounties", fields: [claimerId], references: [id])
   claimerId String?
+  claimedAt DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt

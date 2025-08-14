@@ -1,17 +1,17 @@
-import { getQuestById } from "@/actions/quest"
-import type { Quest } from "@prisma/client"
-import { formatBountyItem, formatBountyStatus } from "@/lib/utils"
+import { getBountyById } from "@/actions/bounty"
 import { Badge } from "@/components/ui/badge"
+import { formatBountyItem, formatBountyStatus } from "@/lib/utils"
+import type { Bounty } from "@prisma/client"
 
 interface Props {
   params: Promise<{ bountyId: string }>
 }
 
-export default async function QuestPage({ params }: Props) {
+export default async function BountyPage({ params }: Props) {
   const { bountyId } = await params
-  const quest: Quest | null = await getQuestById(bountyId)
+  const bounty: Bounty | null = await getBountyById(bountyId)
 
-  if (!quest) {
+  if (!bounty) {
     return (
       <div className="flex flex-col items-center justify-center">
         <h1 className="text-destructive text-2xl font-bold">Bounty not found</h1>
@@ -22,28 +22,30 @@ export default async function QuestPage({ params }: Props) {
   return (
     <div className="mx-auto max-w-2xl p-6">
       <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-3xl font-bold">{formatBountyItem(quest.item)}</h1>
+        <h1 className="text-3xl font-bold">{formatBountyItem(bounty.item)}</h1>
         <span className="rounded-full px-3 py-1 text-sm">
-          <Badge>{formatBountyStatus(quest.status).toLocaleUpperCase()}</Badge>
+          <Badge>{formatBountyStatus(bounty.status).toLocaleUpperCase()}</Badge>
         </span>
       </div>
 
       <div className="space-y-4">
         <div>
           <h2 className="mb-2 text-lg font-semibold">Details</h2>
-          <p className="text-muted-foreground">{quest.details || "No details provided"}</p>
+          <p className="text-muted-foreground">{bounty.details || "No details provided"}</p>
         </div>
 
         <div>
           <h2 className="mb-2 text-lg font-semibold">Reward</h2>
           <p className="text-muted-foreground">
-            {quest.reward ? `$${quest.reward}` : "No reward specified"}
+            {bounty.reward ? `$${bounty.reward}` : "No reward specified"}
           </p>
         </div>
 
         <div>
           <h2 className="mb-2 text-lg font-semibold">Destination</h2>
-          <p className="text-muted-foreground">{quest.destination || "No destination specified"}</p>
+          <p className="text-muted-foreground">
+            {bounty.destination || "No destination specified"}
+          </p>
         </div>
 
         <div>
@@ -52,8 +54,8 @@ export default async function QuestPage({ params }: Props) {
         </div>
 
         {/*<div className="text-muted-foreground space-y-2 text-sm">
-          <p>Created: {quest.createdAt.toLocaleDateString()}</p>
-          <p>Last updated: {quest.updatedAt.toLocaleDateString()}</p>
+          <p>Created: {bounty.createdAt.toLocaleDateString()}</p>
+          <p>Last updated: {bounty.updatedAt.toLocaleDateString()}</p>
         </div>*/}
       </div>
     </div>
