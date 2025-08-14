@@ -11,8 +11,8 @@ import type { Metadata } from "next"
 import { IBM_Plex_Mono, Libre_Baskerville, Lora } from "next/font/google"
 
 export const metadata: Metadata = {
-  title: "Quests",
-  description: "Small Quests, Big Help.",
+  title: "BountyX",
+  description: "Earn. Help. Deliver. Repeat.",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 }
 
@@ -34,7 +34,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 })
 
 const navigationOptions: Array<BottomNavigationBarOptions> = [
-  { label: "Questboard", value: "/", icon: <ScrollTextIcon /> },
+  { label: "Bounty Board", value: "/", icon: <ScrollTextIcon /> },
   { label: "Profile", value: "/profile", icon: <UserIcon /> },
   { label: "Hall of Fame", value: "/hall-of-fame", icon: <TrophyIcon /> },
 ]

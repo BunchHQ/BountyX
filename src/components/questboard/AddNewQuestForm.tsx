@@ -35,7 +35,7 @@ const questSchema = z.object({
   details: z.string().optional(),
   reward: z
     .string()
-    .refine(val => Number.parseInt(val) > 0, { message: "Please enter a valid reward" }),
+    .refine(val => Number.parseInt(val) >= 0, { message: "Please enter a valid reward" }),
   destination: z.string().min(5, { error: "Please enter a valid destination" }),
   deadline: z
     .string()
@@ -75,13 +75,13 @@ export default function AddNewQuestForm({ userId }: Props) {
         form.reset()
 
         toast.success("Quest posted", {
-          description: "Quest has been posted successfully in the Questboard.",
-          action: <Button onClick={() => router.push(`/quests/${quest.id}`)}>View</Button>,
+          description: "Bounty has been offered successfully.",
+          action: <Button onClick={() => router.push(`/bounty/${quest.id}`)}>View</Button>,
         })
       } catch (error) {
-        console.error("Error posting quest:", error)
+        console.error("Error posting bounty:", error)
         toast.error("Error", {
-          description: "There was a problem posting the quest.",
+          description: "There was a problem offering the bounty.",
         })
       }
     })
@@ -224,7 +224,7 @@ export default function AddNewQuestForm({ userId }: Props) {
           )}
         />
         <Button type="submit" className="w-full" disabled={isPending}>
-          {isPending ? <Loader2 className="animate-spin" /> : "Post Quest"}
+          {isPending ? <Loader2 className="animate-spin" /> : "Offer Bounty"}
         </Button>
       </form>
     </Form>

@@ -20,7 +20,9 @@ const Header = async () => {
               height={32}
               className="inline rounded-lg"
             />*/}
-            <span className="font-title">Quests</span>
+            <span className="">
+              Bounty<span className="text-xl">X</span>
+            </span>
           </Link>
         </div>
         <div className="flex items-center gap-4">

@@ -62,7 +62,7 @@ export default function LoginForm() {
             return (
               <div>
                 <div className="font-semibold">Logged In</div>
-                <p>Welcome Back! Loading Questboard</p>
+                <p>Welcome Back! Loading Bounty Board</p>
               </div>
             )
           },

@@ -10,7 +10,7 @@ export default async function QuestsList() {
   if (!authUser) {
     return (
       <div className="grid grid-cols-1 gap-4">
-        <p>Login to view quests.</p>
+        <p>Login to view bounties.</p>
       </div>
     )
   }
@@ -30,7 +30,7 @@ export default async function QuestsList() {
   if (allQuests.length === 0) {
     return (
       <div className="grid grid-cols-1 gap-4">
-        <p>No quests found.</p>
+        <p>No bounties found.</p>
       </div>
     )
   }

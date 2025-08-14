@@ -85,7 +85,7 @@ export default function SignupForm() {
               <div>
                 <div className="font-semibold">Signup Successful</div>
                 <p>
-                  Welcome on Quest {formData.get("name")?.toString()}! Check your Inbox to confirm
+                  Welcome on BountyX {formData.get("name")?.toString()}! Check your Inbox to confirm
                   your account
                 </p>
               </div>

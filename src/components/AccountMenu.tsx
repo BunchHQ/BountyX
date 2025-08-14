@@ -60,7 +60,7 @@ export default async function AccountMenu() {
         <DropdownMenuItem asChild>
           <Link href="/" className="cursor-pointer">
             <LayoutDashboardIcon />
-            Questboard
+            Bounty Board
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem variant="destructive">

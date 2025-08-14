@@ -1,6 +1,6 @@
 "use client"
 
-import { QuestStatus, type Quest, type User } from "@prisma/client"
+import { Badge } from "@/components/ui/badge"
 import {
   Card,
   CardAction,
@@ -10,24 +10,37 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { formatBountyItem, formatBountyStatus } from "@/lib/utils"
+import { QuestStatus, type Quest, type User } from "@prisma/client"
+import Link from "next/link"
+import { useEffect, useState } from "react"
 import { Button } from "../ui/button"
 
 export default function QuestCard({ quest, user }: { quest: Quest; user: User }) {
+  const [deadline, setDeadline] = useState("")
+
+  useEffect(() => {
+    setDeadline(quest.deadline?.toLocaleString() ?? "N/A")
+  })
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{quest.item}</CardTitle>
+        <CardTitle className="text-2xl">{formatBountyItem(quest.item)}</CardTitle>
         <CardDescription>
-          <p>
-            Status:{" "}
-            <span className={`${quest.status === QuestStatus.COMPLETED ? "text-green-600" : ""}`}>
-              {quest.status}
-            </span>
+          <p className="font-mono font-semibold">
+            {/*<span className={`${quest.status === QuestStatus.COMPLETED ? "text-green-600" : ""}`}>*/}
+            <Badge variant="secondary">
+              {formatBountyStatus(quest.status).toLocaleUpperCase()}
+            </Badge>
+            {/*</span>*/}
           </p>
-          <p>{quest.reward && ` • Reward: ₹${quest.reward}`}</p>
+          <p>{quest.reward && `Reward: ₹${quest.reward}`}</p>
         </CardDescription>
         <CardAction>
-          <Button variant="secondary">Details</Button>
+          <Link href={`/bounty/${quest.id}`}>
+            <Button variant="secondary">Details</Button>
+          </Link>
         </CardAction>
       </CardHeader>
       <CardContent>
@@ -40,14 +53,16 @@ export default function QuestCard({ quest, user }: { quest: Quest; user: User })
           )}
           {quest.deadline && (
             <p className="text-sm">
-              <span className="font-semibold">Deadline:</span> {quest.deadline.toLocaleString()}
+              <span className="font-semibold">Deadline:</span> {deadline}
             </p>
           )}
         </div>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <p className="text-muted-foreground text-sm">Posted {quest.createdAt.toLocaleString()}</p>
-        {quest.status === "POSTED" && quest.posterId !== user.id && <Button>Accept Quest</Button>}
+        {/*<p className="text-muted-foreground text-sm">Posted {quest.createdAt.toLocaleString()}</p>*/}
+        {quest.status === QuestStatus.POSTED && quest.posterId !== user.id && (
+          <Button>Claim Bounty</Button>
+        )}
       </CardFooter>
     </Card>
   )

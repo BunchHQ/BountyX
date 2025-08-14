@@ -1,8 +1,8 @@
 # Plan for the App
 
 [x] Login/Signup
-[x] List Quests
-[x] Add quest
+[x] List Bounties
+[x] Add bounty
 
 ### To Add
 

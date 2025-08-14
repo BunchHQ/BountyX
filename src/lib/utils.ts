@@ -1,3 +1,4 @@
+import { Item, QuestStatus } from "@prisma/client"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -8,6 +9,44 @@ export const handleError = (error: unknown) => {
   } else {
     console.error(error)
     return { errorMessage: "An unknown error occurred" }
+  }
+}
+
+export const formatBountyItem = (item: Item): string => {
+  switch (item) {
+    case Item.STATIONERY:
+      return "Stationery"
+    case Item.MEDICINE:
+      return "Medicine"
+    case Item.FOOD:
+      return "Food"
+    case Item.TICKETS:
+      return "Tickets"
+    case Item.PURIFIED_WATER:
+      return "Purified Water"
+    case Item.GROCERY:
+      return "Grocery"
+    case Item.TRANSPORT:
+      return "Transport"
+    case Item.OTHER:
+      return "Other"
+    default:
+      return "Unknown Item"
+  }
+}
+
+export const formatBountyStatus = (status: QuestStatus): string => {
+  switch (status) {
+    case QuestStatus.POSTED:
+      return "Posted"
+    case QuestStatus.CLAIMED:
+      return "Claimed"
+    case QuestStatus.COMPLETED:
+      return "Completed"
+    case QuestStatus.CANCELLED:
+      return "Cancelled"
+    default:
+      return "Unknown Status"
   }
 }
 

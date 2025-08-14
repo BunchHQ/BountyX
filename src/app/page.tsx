@@ -45,30 +45,30 @@ export default async function HomePage() {
     <main className="">
       <div className="prose dark:prose-invert prose-h1:mb-0">
         <div className="flex w-full flex-row items-center justify-between">
-          <h1>Questboard</h1>
+          <h1>Bounty Board</h1>
           <Dialog>
             <DialogTrigger asChild>
               <Button size="icon" variant="default" className="text-accent size-10">
                 <PlusIcon className="size-8" />
-                <span className="sr-only">Add new Quest</span>
+                <span className="sr-only">Offer a Bounty</span>
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Add new Quest</DialogTitle>
-                <DialogDescription>Add a new Quest to the public board.</DialogDescription>
+                <DialogTitle>Offer a Bounty</DialogTitle>
+                <DialogDescription>Add a new Bounty to the public board.</DialogDescription>
               </DialogHeader>
               <AddNewQuestForm userId={user.id} />
               <DialogFooter>
                 <p className="text-muted-foreground text-xs">
                   Remember: We do NOT guarantee any deadlines or rewards. Both are the sole
-                  responsibility of the claimer and poster respectively.
+                  responsibilities of the claimer and poster respectively.
                 </p>
               </DialogFooter>
             </DialogContent>
           </Dialog>
         </div>
-        <p className="text-muted-foreground">Currently active quests</p>
+        <p className="text-muted-foreground">Currently active bounties</p>
         <Suspense fallback={<QuestsLoading />}>
           <QuestsList />
         </Suspense>
