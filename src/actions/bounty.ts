@@ -110,6 +110,7 @@ export async function claimBounty(bountyId: string, userId: string): Promise<Bou
       },
       data: {
         claimerId: userId,
+        claimedAt: new Date(),
       },
     })
 
@@ -121,5 +122,37 @@ export async function claimBounty(bountyId: string, userId: string): Promise<Bou
   } catch (error) {
     console.error("Failed to claim bounty:", error)
     throw new Error("Failed to claim bounty")
+  }
+}
+
+/**
+ *
+ * @param userId User ID
+ * @returns count of posted bounties by user
+ */
+export async function getPostedBountyCountByUserId(userId: string): Promise<number> {
+  try {
+    return await db.bounty.count({
+      where: { posterId: userId },
+    })
+  } catch (error) {
+    console.error("Error fetching count:", error)
+    return 0
+  }
+}
+
+/**
+ *
+ * @param userId User ID
+ * @returns count of claimed bounties by user
+ */
+export async function getClaimedBountyCountByUserId(userId: string): Promise<number> {
+  try {
+    return await db.bounty.count({
+      where: { claimerId: userId },
+    })
+  } catch (error) {
+    console.error("Error fetching count:", error)
+    return 0
   }
 }

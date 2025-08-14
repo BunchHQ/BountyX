@@ -35,7 +35,7 @@ export default function BountyCard({ bounty, user }: { bounty: Bounty; user: Use
             </Badge>
             {/*</span>*/}
           </p>
-          <p>{bounty.reward && `Reward: ₹${bounty.reward}`}</p>
+          <p>{bounty.reward !== null && `Reward: ₹${bounty.reward}`}</p>
         </CardDescription>
         <CardAction>
           <Link href={`/bounty/${bounty.id}`}>
