@@ -1,4 +1,4 @@
-import { type Bounty } from "@prisma/client"
+import { type Bounty, type User } from "@prisma/client"
 import BountyCard from "./BountyCard"
 import { getAllBounties } from "@/actions/bounty"
 import getUser from "@/utils/supabase/server"
@@ -15,7 +15,7 @@ export default async function BountiesList() {
     )
   }
 
-  const user = await getUserById(authUser.id)
+  const user: User | null = await getUserById(authUser.id)
 
   if (!user) {
     return (
@@ -25,7 +25,15 @@ export default async function BountiesList() {
     )
   }
 
-  const allBounties: Array<Bounty> = await getAllBounties()
+  const allBounties: Array<Bounty> | null = await getAllBounties()
+
+  if (!allBounties) {
+    return (
+      <div className="grid grid-cols-1 gap-4">
+        <p>Unable to retrieve bounties right now. Please try again after sometime.</p>
+      </div>
+    )
+  }
 
   if (allBounties.length === 0) {
     return (

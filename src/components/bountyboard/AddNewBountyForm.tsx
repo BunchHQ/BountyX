@@ -70,19 +70,16 @@ export default function AddNewBountyForm({ userId }: Props) {
     }
 
     startTransition(async () => {
-      try {
-        const bounty: Bounty = await createBounty(bountyData)
-        form.reset()
+      const { bounty, message } = await createBounty(bountyData)
+      form.reset()
 
+      if (bounty !== null) {
         toast.success("Bounty offered", {
-          description: "Bounty has been offered successfully.",
+          description: message,
           action: <Button onClick={() => router.push(`/bounty/${bounty.id}`)}>View</Button>,
         })
-      } catch (error) {
-        console.error("Error posting bounty:", error)
-        toast.error("Error", {
-          description: "There was a problem offering the bounty.",
-        })
+      } else {
+        toast.error(message)
       }
     })
   }

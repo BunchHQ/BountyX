@@ -1,16 +1,17 @@
 "use server"
 
-import type { BountyCreateType } from "@/lib/types"
+import type { BountyCreateType, BountyWithMessage } from "@/lib/types"
 import { db } from "@/server/db"
-import type { Bounty } from "@prisma/client"
+import { BountyStatus, type Bounty } from "@prisma/client"
 import { revalidatePath } from "next/cache"
 
 /**
  * Create a new bounty
  */
-export async function createBounty(bountyData: BountyCreateType): Promise<Bounty> {
+export async function createBounty(bountyData: BountyCreateType): Promise<BountyWithMessage> {
   try {
-    console.log("Creating bounty with data:", bountyData)
+    console.debug("Creating bounty with data:", bountyData)
+
     const bounty: Bounty = await db.bounty.create({
       data: bountyData,
     })
@@ -19,10 +20,10 @@ export async function createBounty(bountyData: BountyCreateType): Promise<Bounty
     revalidatePath(`/bounty/${bounty.id}`, "page")
     revalidatePath(`/profile`, "page")
 
-    return bounty
+    return { bounty, message: "Bounty offered successfully!" }
   } catch (error) {
     console.error("Failed to create bounty:", error)
-    throw new Error("Failed to create bounty")
+    return { bounty: null, message: "Failed to offer bounty. Please try again after sometime." }
   }
 }
 
@@ -42,7 +43,7 @@ export async function getBountyById(id: string): Promise<Bounty | null> {
     return bounty
   } catch (error) {
     console.error("Failed to get bounty by id:", error)
-    throw new Error("Failed to get bounty by id")
+    return null
   }
 }
 
@@ -50,7 +51,7 @@ export async function getBountyById(id: string): Promise<Bounty | null> {
  *
  * @returns Array of all bounties
  */
-export async function getAllBounties(): Promise<Bounty[]> {
+export async function getAllBounties(): Promise<Bounty[] | null> {
   try {
     const bounties: Array<Bounty> | null = await db.bounty.findMany({
       orderBy: {
@@ -61,7 +62,7 @@ export async function getAllBounties(): Promise<Bounty[]> {
     return bounties
   } catch (error) {
     console.error("Failed to get all bounties:", error)
-    throw new Error("Failed to get all bounties")
+    return null
   }
 }
 
@@ -74,9 +75,10 @@ export async function getAllBounties(): Promise<Bounty[]> {
 export async function updateBounty(
   bountyId: string,
   bountyData: Partial<BountyCreateType>,
-): Promise<Bounty> {
+): Promise<Bounty | null> {
   try {
-    console.log("Updating bounty with id:", bountyId, "and data:", bountyData)
+    console.debug("Updating bounty with id:", bountyId, "and data:", bountyData)
+
     const bounty: Bounty = await db.bounty.update({
       where: {
         id: bountyId,
@@ -91,7 +93,7 @@ export async function updateBounty(
     return bounty
   } catch (error) {
     console.error("Failed to update bounty:", error)
-    throw new Error("Failed to update bounty")
+    return null
   }
 }
 
@@ -101,27 +103,47 @@ export async function updateBounty(
  * @param userId User ID of user claiming the bounty
  * @returns Updated Bounty
  */
-export async function claimBounty(bountyId: string, userId: string): Promise<Bounty> {
+export async function claimBounty(bountyId: string, userId: string): Promise<BountyWithMessage> {
   try {
-    console.log("Claiming bounty with id:", bountyId, "for user:", userId)
-    const bounty: Bounty = await db.bounty.update({
+    const bounty: Bounty | null = await getBountyById(bountyId)
+
+    if (bounty === null) {
+      return { bounty: null, message: "Bounty not found." }
+    }
+
+    if (bounty.status === BountyStatus.CLAIMED) {
+      if (bounty.claimerId! === userId) {
+        return { bounty: null, message: "You have already claimed this bounty." }
+      } else {
+        return { bounty: null, message: "Bounty already claimed." }
+      }
+    }
+
+    if (bounty.posterId === userId) {
+      return { bounty: null, message: "Cannot claim own bounty." }
+    }
+
+    console.debug("Claiming bounty with id:", bountyId, "for user:", userId)
+
+    const updatedBounty: Bounty = await db.bounty.update({
       where: {
         id: bountyId,
       },
       data: {
+        status: BountyStatus.CLAIMED,
         claimerId: userId,
         claimedAt: new Date(),
       },
     })
 
     revalidatePath(`/`, "page")
-    revalidatePath(`/bounty/${bounty.id}`, "page")
+    revalidatePath(`/bounty/${updatedBounty.id}`, "page")
     revalidatePath(`/profile`, "page")
 
-    return bounty
+    return { bounty: updatedBounty, message: "Bounty Claimed. Now complete it!" }
   } catch (error) {
     console.error("Failed to claim bounty:", error)
-    throw new Error("Failed to claim bounty")
+    return { bounty: null, message: "Failed to claim bounty. Please try again." }
   }
 }
 
