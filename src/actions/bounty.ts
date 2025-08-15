@@ -136,6 +136,7 @@ export async function claimBounty(bountyId: string, userId: string): Promise<Bou
       },
     })
 
+    revalidatePath(`/`, "layout")
     revalidatePath(`/`, "page")
     revalidatePath(`/bounty/${updatedBounty.id}`, "page")
     revalidatePath(`/profile`, "page")

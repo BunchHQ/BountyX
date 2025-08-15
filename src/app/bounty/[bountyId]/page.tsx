@@ -1,6 +1,8 @@
 import { getBountyById } from "@/actions/bounty"
+import ClaimBountyButton from "@/components/reusable/ClaimBountyButton"
 import { Badge } from "@/components/ui/badge"
 import { formatBountyItem, formatBountyStatus } from "@/lib/utils"
+import getUser from "@/utils/supabase/server"
 import type { Bounty } from "@prisma/client"
 
 interface Props {
@@ -8,6 +10,16 @@ interface Props {
 }
 
 export default async function BountyPage({ params }: Props) {
+  const user = await getUser()
+
+  if (!user) {
+    return (
+      <div className="flex flex-col items-center justify-center">
+        <h1 className="text-destructive text-2xl font-bold">Please Login to view this page.</h1>
+      </div>
+    )
+  }
+
   const { bountyId } = await params
   const bounty: Bounty | null = await getBountyById(bountyId)
 
@@ -52,6 +64,8 @@ export default async function BountyPage({ params }: Props) {
           <h2 className="mb-2 text-lg font-semibold">Deadline</h2>
           {/*<p className="text-muted-foreground">{deadline}</p>*/}
         </div>
+
+        <ClaimBountyButton className="mt-8 w-full" bounty={bounty} userId={user.id} />
 
         {/*<div className="text-muted-foreground space-y-2 text-sm">
           <p>Created: {bounty.createdAt.toLocaleDateString()}</p>

@@ -1,6 +1,5 @@
 "use client"
 
-import { claimBounty } from "@/actions/bounty"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -15,33 +14,15 @@ import {
 import { formatBountyItem, formatBountyStatus } from "@/lib/utils"
 import { type Bounty, type User } from "@prisma/client"
 import Link from "next/link"
-import { useEffect, useState, useTransition } from "react"
-import { toast } from "sonner"
+import { useEffect, useState } from "react"
 import ClaimBountyButton from "../reusable/ClaimBountyButton"
 
 export default function BountyCard({ bounty, user }: { bounty: Bounty; user: User }) {
   const [deadline, setDeadline] = useState("")
-  const [isPending, startTransition] = useTransition()
 
   useEffect(() => {
     setDeadline(bounty.deadline?.toLocaleString() ?? "N/A")
   })
-
-  function handleClaimBounty(bounty: Bounty) {
-    startTransition(async () => {
-      const { bounty: updatedBounty, message } = await claimBounty(bounty.id, user.id)
-
-      if (
-        updatedBounty &&
-        updatedBounty.claimedAt !== null &&
-        updatedBounty.claimerId === user.id
-      ) {
-        toast.success(message)
-      } else {
-        toast.error(message)
-      }
-    })
-  }
 
   return (
     <Card>
@@ -80,12 +61,7 @@ export default function BountyCard({ bounty, user }: { bounty: Bounty; user: Use
       </CardContent>
       <CardFooter className="flex justify-between">
         {/*<p className="text-muted-foreground text-sm">Posted {bounty.createdAt.toLocaleString()}</p>*/}
-        <ClaimBountyButton
-          bounty={bounty}
-          onClick={handleClaimBounty}
-          userId={user.id}
-          isPending={isPending}
-        />
+        <ClaimBountyButton bounty={bounty} userId={user.id} />
       </CardFooter>
     </Card>
   )
