@@ -1,4 +1,5 @@
 import { getBountyById } from "@/actions/bounty"
+import CancelBountyButton from "@/components/reusable/CancelBountyButton"
 import ClaimBountyButton from "@/components/reusable/ClaimBountyButton"
 import { Badge } from "@/components/ui/badge"
 import { formatBountyItem, formatBountyStatus } from "@/lib/utils"
@@ -65,7 +66,10 @@ export default async function BountyPage({ params }: Props) {
           {/*<p className="text-muted-foreground">{deadline}</p>*/}
         </div>
 
-        <ClaimBountyButton className="mt-8 w-full" bounty={bounty} userId={user.id} />
+        <div className="mt-8 space-y-2">
+          <ClaimBountyButton className="w-full" bounty={bounty} userId={user.id} />
+          <CancelBountyButton className="w-full" bounty={bounty} userId={user.id} />
+        </div>
 
         {/*<div className="text-muted-foreground space-y-2 text-sm">
           <p>Created: {bounty.createdAt.toLocaleDateString()}</p>

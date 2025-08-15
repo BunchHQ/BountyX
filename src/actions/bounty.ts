@@ -16,9 +16,9 @@ export async function createBounty(bountyData: BountyCreateType): Promise<Bounty
       data: bountyData,
     })
 
-    revalidatePath(`/`, "page")
-    revalidatePath(`/bounty/${bounty.id}`, "page")
-    revalidatePath(`/profile`, "page")
+    revalidatePath(`/`)
+    revalidatePath(`/bounty/${bounty.id}`)
+    revalidatePath(`/profile`)
 
     return { bounty, message: "Bounty offered successfully!" }
   } catch (error) {
@@ -86,9 +86,9 @@ export async function updateBounty(
       data: bountyData,
     })
 
-    revalidatePath(`/`, "page")
-    revalidatePath(`/bounty/${bounty.id}`, "page")
-    revalidatePath(`/profile`, "page")
+    revalidatePath(`/`)
+    revalidatePath(`/bounty/${bounty.id}`)
+    revalidatePath(`/profile`)
 
     return bounty
   } catch (error) {
@@ -136,15 +136,35 @@ export async function claimBounty(bountyId: string, userId: string): Promise<Bou
       },
     })
 
-    revalidatePath(`/`, "layout")
-    revalidatePath(`/`, "page")
-    revalidatePath(`/bounty/${updatedBounty.id}`, "page")
-    revalidatePath(`/profile`, "page")
+    revalidatePath(`/`)
+    revalidatePath(`/bounty/${updatedBounty.id}`)
+    revalidatePath(`/profile`)
 
     return { bounty: updatedBounty, message: "Bounty Claimed. Now complete it!" }
   } catch (error) {
     console.error("Failed to claim bounty:", error)
     return { bounty: null, message: "Failed to claim bounty. Please try again." }
+  }
+}
+
+export async function cancelBountyById(id: string): Promise<BountyWithMessage> {
+  try {
+    console.debug("Cancelling bounty with id:", id)
+
+    const updatedBounty: Bounty | null = await updateBounty(id, { status: BountyStatus.CANCELLED })
+
+    if (!updatedBounty) {
+      return { bounty: null, message: "Failed to withdraw bounty." }
+    }
+
+    revalidatePath(`/`)
+    revalidatePath(`/bounty/${updatedBounty.id}`, "page")
+    revalidatePath(`/profile`, "page")
+
+    return { bounty: updatedBounty, message: "Bounty withdrawn successfully!" }
+  } catch (error) {
+    console.error("Failed to cancel bounty:", error)
+    return { bounty: null, message: "Failed to withdraw bounty. Please try again." }
   }
 }
 

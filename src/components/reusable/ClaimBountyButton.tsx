@@ -6,7 +6,6 @@ import { Loader2Icon } from "lucide-react"
 import { useTransition } from "react"
 import { claimBounty } from "@/actions/bounty"
 import { toast } from "sonner"
-import type { ClassNameValue } from "tailwind-merge"
 
 interface Props {
   bounty: Bounty | null
@@ -14,6 +13,7 @@ interface Props {
   userId: string
   className?: string
 }
+
 export default function ClaimBountyButton({ bounty, onClick, userId, className }: Props) {
   const [isPending, startTransition] = useTransition()
 
@@ -21,7 +21,12 @@ export default function ClaimBountyButton({ bounty, onClick, userId, className }
     startTransition(async () => {
       const { bounty: updatedBounty, message } = await claimBounty(bounty.id, userId)
 
-      if (updatedBounty && updatedBounty.claimedAt !== null && updatedBounty.claimerId === userId) {
+      if (
+        updatedBounty &&
+        updatedBounty.status === BountyStatus.CLAIMED &&
+        updatedBounty.claimedAt !== null &&
+        updatedBounty.claimerId === userId
+      ) {
         toast.success(message)
       } else {
         toast.error(message)
@@ -32,7 +37,7 @@ export default function ClaimBountyButton({ bounty, onClick, userId, className }
   }
 
   if (!bounty) {
-    return <></>
+    return null
   }
 
   if (bounty.status === BountyStatus.CLAIMED && bounty.claimerId === userId) {
@@ -53,7 +58,7 @@ export default function ClaimBountyButton({ bounty, onClick, userId, className }
 
   if (bounty.status === BountyStatus.CLAIMED) {
     return (
-      <Button className={className} disabled>
+      <Button className={className} disabled variant="secondary">
         Already Claimed
       </Button>
     )
@@ -61,7 +66,7 @@ export default function ClaimBountyButton({ bounty, onClick, userId, className }
 
   if (bounty.status === BountyStatus.COMPLETED || bounty.status === BountyStatus.CANCELLED) {
     return (
-      <Button className={className} disabled>
+      <Button className={className} disabled variant="destructive">
         Bounty Closed
       </Button>
     )
@@ -69,7 +74,7 @@ export default function ClaimBountyButton({ bounty, onClick, userId, className }
 
   if (bounty.status === BountyStatus.OFFERED && bounty.posterId === userId) {
     return (
-      <Button className={className} disabled>
+      <Button className={className} disabled variant="outline">
         You Posted
       </Button>
     )
@@ -82,4 +87,6 @@ export default function ClaimBountyButton({ bounty, onClick, userId, className }
       </Button>
     )
   }
+
+  return null
 }

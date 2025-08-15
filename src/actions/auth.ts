@@ -29,7 +29,6 @@ export async function login(formData: FormData) {
     if (error) throw error
 
     revalidatePath("/", "layout")
-    revalidatePath("/profile", "page")
     return { errorMessage: null }
   } catch (error) {
     return handleError(error)
@@ -45,7 +44,6 @@ export async function logout() {
     if (error) throw error
 
     revalidatePath("/", "layout")
-    revalidatePath("/profile", "page")
     return { errorMessage: null }
   } catch (error) {
     return handleError(error)
@@ -107,7 +105,6 @@ export async function signup(formData: FormData) {
     })
 
     revalidatePath("/", "layout")
-    revalidatePath("/profile", "page")
     return { errorMessage: null }
   } catch (error) {
     return handleError(error)
