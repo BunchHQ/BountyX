@@ -52,6 +52,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       className={`${libre.variable} ${lora.variable} ${ibmPlexMono.variable}`}
       suppressHydrationWarning
     >
+      <head>
+        <meta name="apple-mobile-web-app-title" content="BountyX" />
+      </head>
+      
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableColorScheme enableSystem>
           <Header />
