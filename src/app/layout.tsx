@@ -58,6 +58,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       className={`${libre.variable} ${lora.variable} ${ibmPlexMono.variable}`}
       suppressHydrationWarning
     >
+      <head>
+        <link rel="manifest" href="/manifest.webmanifest" />
+      </head>
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableColorScheme enableSystem>
           <Header />
