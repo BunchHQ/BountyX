@@ -15,6 +15,11 @@ export const metadata: Metadata = {
   description: "Earn. Help. Deliver. Repeat.",
   appleWebApp: { capable: true, title: "BountyX" },
   applicationName: "BountyX",
+  authors: [
+    { name: "Harsh Narayan Jha", url: "https://harshnj.is-a.dev" },
+    { name: "dev-satyamjha", url: "https://satyamjha.is-a.dev" },
+    { name: "tomlin7", url: "https://github.com/tomlin7" },
+  ],
 }
 
 const libre = Libre_Baskerville({
