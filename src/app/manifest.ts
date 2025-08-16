@@ -13,6 +13,22 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: "#332c21",
     dir: "auto",
     lang: "en-US",
+    shortcuts: [
+      {
+        name: "View Latest Bounties",
+        short_name: "Bounties",
+        description: "Browse Latest Bounties on BountX",
+        url: "/?source=pwa",
+        icons: [{ src: "/web-app-manifest-192x192.png", sizes: "192x192" }],
+      },
+      {
+        name: "Offer a new Bounty",
+        short_name: "New Bounty",
+        description: "Offer a new Bounty to the public board",
+        url: "/?source=pwa",
+        icons: [{ src: "/web-app-manifest-192x192.png", sizes: "192x192" }],
+      },
+    ],
     screenshots: [
       {
         src: "/android_login.png",

@@ -13,7 +13,8 @@ import { IBM_Plex_Mono, Libre_Baskerville, Lora } from "next/font/google"
 export const metadata: Metadata = {
   title: "BountyX",
   description: "Earn. Help. Deliver. Repeat.",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  appleWebApp: { capable: true, title: "BountyX" },
+  applicationName: "BountyX",
 }
 
 const libre = Libre_Baskerville({
@@ -52,10 +53,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       className={`${libre.variable} ${lora.variable} ${ibmPlexMono.variable}`}
       suppressHydrationWarning
     >
-      <head>
-        <meta name="apple-mobile-web-app-title" content="BountyX" />
-      </head>
-      
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableColorScheme enableSystem>
           <Header />
