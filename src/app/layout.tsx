@@ -20,12 +20,14 @@ const libre = Libre_Baskerville({
   subsets: ["latin"],
   variable: "--font-libre-baskerville",
   display: "swap",
+  adjustFontFallback: false,
   weight: ["400", "700"],
 })
 
 const lora = Lora({
   subsets: ["latin"],
   variable: "--font-lora",
+  adjustFontFallback: false,
   display: "swap",
 })
 
@@ -33,6 +35,7 @@ const ibmPlexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   variable: "--font-ibm-plex-mono",
   display: "swap",
+  adjustFontFallback: false,
   weight: ["400", "700"],
 })
 
