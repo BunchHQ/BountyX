@@ -19,17 +19,20 @@ export const metadata: Metadata = {
 const libre = Libre_Baskerville({
   subsets: ["latin"],
   variable: "--font-libre-baskerville",
+  display: "swap",
   weight: ["400", "700"],
 })
 
 const lora = Lora({
   subsets: ["latin"],
   variable: "--font-lora",
+  display: "swap",
 })
 
 const ibmPlexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   variable: "--font-ibm-plex-mono",
+  display: "swap",
   weight: ["400", "700"],
 })
 

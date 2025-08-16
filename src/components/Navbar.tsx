@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import AccountMenu from "./AccountMenu"
 import { ColorModeToggle } from "./reusable/ColorModeToggle"
+import PushNotificationManager from "./notifications/PushNotificationManager"
 
 const Header = async () => {
   const user = await getUser()
@@ -27,6 +28,7 @@ const Header = async () => {
         </div>
         <div className="flex items-center gap-4">
           <ColorModeToggle />
+          {user && <PushNotificationManager user={user} />}
           {user ? (
             <AccountMenu />
           ) : (

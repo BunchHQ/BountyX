@@ -53,6 +53,8 @@ model User {
   // Bounties claimed by the user
   claimedBounties Bounty[] @relation("ClaimedBounties")
 
+  subscriptions Subscription[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 }
@@ -75,4 +77,18 @@ model Bounty {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
+}
+
+model Subscription {
+  id         String   @id @default(uuid())
+  endpoint   String   @unique @db.Text
+  keysAuth   String   @db.Text
+  keysP256dh String   @db.Text
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  userAgent  String?  @db.Text
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  @@unique([userId, endpoint])
 }

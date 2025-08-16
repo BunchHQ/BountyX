@@ -5,7 +5,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@theme {
+/*@theme {
   --font-sans:
     var(--font-lora), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
     "Noto Color Emoji";
@@ -13,7 +13,7 @@
   --font-mono:
     var(--font-ibm-plex-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
     monospace;
-}
+}*/
 
 :root {
   --background: oklch(0.9618 0.0208 88.7194);
@@ -48,9 +48,16 @@
   --sidebar-accent-foreground: oklch(0.3795 0.0309 64.7091);
   --sidebar-border: oklch(0.8688 0.045 83.8927);
   --sidebar-ring: oklch(0.6351 0.1052 63.859);
-  --font-sans: Libre Baskerville, serif;
+  /*--font-sans: Libre Baskerville, serif;
   --font-serif: Lora, serif;
-  --font-mono: IBM Plex Mono, monospace;
+  --font-mono: IBM Plex Mono, monospace;*/
+  --font-sans:
+    var(--font-lora), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+    "Noto Color Emoji";
+  --font-serif: var(--font-libre-baskerville), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-mono:
+    var(--font-ibm-plex-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+    monospace;
   --radius: 0.25rem;
   --shadow-2xs: 2px 3px 5px 0px hsl(26.6667 17.6471% 20% / 0.06);
   --shadow-xs: 2px 3px 5px 0px hsl(26.6667 17.6471% 20% / 0.06);
@@ -97,9 +104,9 @@
   --sidebar-accent-foreground: oklch(0.928 0.0263 82.3839);
   --sidebar-border: oklch(0.3796 0.0246 54.5408);
   --sidebar-ring: oklch(0.7369 0.0805 66.0333);
-  --font-sans: Libre Baskerville, serif;
+  /*--font-sans: Libre Baskerville, serif;
   --font-serif: Lora, serif;
-  --font-mono: IBM Plex Mono, monospace;
+  --font-mono: IBM Plex Mono, monospace;*/
   --radius: 0.25rem;
   --shadow-2xs: 2px 3px 5px 0px hsl(26.6667 17.6471% 20% / 0.06);
   --shadow-xs: 2px 3px 5px 0px hsl(26.6667 17.6471% 20% / 0.06);
@@ -169,6 +176,6 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-serif;
   }
 }

@@ -4,6 +4,7 @@ import type { BountyCreateType, BountyWithMessage } from "@/lib/types"
 import { db } from "@/server/db"
 import { BountyStatus, type Bounty } from "@prisma/client"
 import { revalidatePath } from "next/cache"
+import { sendNotification } from "./notification"
 
 /**
  * Create a new bounty
@@ -124,7 +125,6 @@ export async function claimBounty(bountyId: string, userId: string): Promise<Bou
     }
 
     console.debug("Claiming bounty with id:", bountyId, "for user:", userId)
-
     const updatedBounty: Bounty = await db.bounty.update({
       where: {
         id: bountyId,
@@ -139,6 +139,18 @@ export async function claimBounty(bountyId: string, userId: string): Promise<Bou
     revalidatePath(`/`)
     revalidatePath(`/bounty/${updatedBounty.id}`)
     revalidatePath(`/profile`)
+
+    try {
+      console.debug("Sending claimed notification to poster", updatedBounty.posterId!)
+      await sendNotification(
+        "Bounty Claimed",
+        "Your bounty was claimed by someone",
+        updatedBounty.posterId!,
+      )
+    } catch (notificationError) {
+      console.error("Failed to send notification:", notificationError)
+      // Continue execution even if notification fails
+    }
 
     return { bounty: updatedBounty, message: "Bounty Claimed. Now complete it!" }
   } catch (error) {
@@ -160,6 +172,20 @@ export async function cancelBountyById(id: string): Promise<BountyWithMessage> {
     revalidatePath(`/`)
     revalidatePath(`/bounty/${updatedBounty.id}`, "page")
     revalidatePath(`/profile`, "page")
+
+    if (updatedBounty.claimerId !== null) {
+      try {
+        console.debug("Sending cancelled notification to claimer", updatedBounty.claimerId)
+        await sendNotification(
+          "Bounty Withdrawn",
+          "Your claimed bounty was withdrawn.",
+          updatedBounty.claimerId,
+        )
+      } catch (notificationError) {
+        console.error("Failed to send notification:", notificationError)
+        // Continue execution even if notification fails
+      }
+    }
 
     return { bounty: updatedBounty, message: "Bounty withdrawn successfully!" }
   } catch (error) {
