@@ -22,6 +22,7 @@ import { toast } from "sonner"
 import { z } from "zod"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { Textarea } from "../ui/textarea"
+import { DateTime, Interval } from "luxon"
 
 interface Props {
   userId: string
@@ -29,6 +30,12 @@ interface Props {
 
 const rewardChoicesInINR = [0, 5, 10, 20, 50]
 const deadlineChoicesInMinutes = [5, 10, 20, 30, 60, 120, 300]
+
+const formatDeadlineMinutes = (deadline: number) => {
+  return Interval.fromDateTimes(DateTime.now(), DateTime.now().plus({ minutes: deadline }))
+    .toDuration(["hours", "minutes"])
+    .toHuman({ showZeros: false, unitDisplay: "short" })
+}
 
 const bountySchema = z.object({
   item: z.enum(Item, { error: "Please select an item" }),
@@ -64,7 +71,7 @@ export default function AddNewBountyForm({ userId }: Props) {
       details: values.details || "",
       reward: Number.parseInt(values.reward),
       destination: values.destination,
-      deadline: new Date(Date.now() + Number.parseInt(values.deadline) * 60 * 1000),
+      deadline: Number.parseInt(values.deadline) * 60,
       posterId: userId,
       status: BountyStatus.OFFERED,
     }
@@ -211,7 +218,7 @@ export default function AddNewBountyForm({ userId }: Props) {
                 <SelectContent>
                   {deadlineChoicesInMinutes.map((deadline, index) => (
                     <SelectItem key={index} value={deadline.toString()}>
-                      {deadline}m
+                      {formatDeadlineMinutes(deadline)}
                     </SelectItem>
                   ))}
                 </SelectContent>

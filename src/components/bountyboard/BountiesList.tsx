@@ -65,7 +65,7 @@ export default function BountiesList({ user, allBounties }: Props) {
         selectedStatus={selectedStatus}
         onStatusChange={handleStatusChange}
       />
-      <div className="grid grid-cols-1 gap-4">
+      <div className="my-4 grid grid-cols-1 gap-4">
         {filteredBounties.length === 0 && (
           <p className="text-center">No bounties found. Check the filters.</p>
         )}
