@@ -1,10 +1,17 @@
 "use server"
 
-import type { BountyCreateType, BountyWithMessage, BountyWithPartialPoster } from "@/lib/types"
+import type {
+  BountyCreateType,
+  BountyWithMessage,
+  BountyWithPartialPoster,
+  BountyWithPosterAndClaimer,
+} from "@/lib/types"
 import { db } from "@/server/db"
-import { BountyStatus, type Bounty } from "@prisma/client"
+import { BountyStatus, type Bounty, type User } from "@prisma/client"
 import { revalidatePath } from "next/cache"
 import { sendNotification } from "./notification"
+import { getUserById } from "./user"
+import { formatBountyItem } from "@/lib/utils"
 
 /**
  * Create a new bounty
@@ -38,6 +45,32 @@ export async function getBountyById(id: string): Promise<Bounty | null> {
     const bounty: Bounty | null = await db.bounty.findUnique({
       where: {
         id,
+      },
+    })
+
+    return bounty
+  } catch (error) {
+    console.error("Failed to get bounty by id:", error)
+    return null
+  }
+}
+
+/**
+ *
+ * @param id Bounty ID
+ * @returns The Bounty object with poster and claimer details
+ */
+export async function getBountyByIdWithPosterAndClaimer(
+  id: string,
+): Promise<BountyWithPosterAndClaimer | null> {
+  try {
+    const bounty: BountyWithPosterAndClaimer | null = await db.bounty.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        poster: true,
+        claimer: true,
       },
     })
 
@@ -133,9 +166,14 @@ export async function updateBounty(
 export async function claimBounty(bountyId: string, userId: string): Promise<BountyWithMessage> {
   try {
     const bounty: Bounty | null = await getBountyById(bountyId)
+    const user: User | null = await getUserById(userId)
 
     if (bounty === null) {
       return { bounty: null, message: "Bounty not found." }
+    }
+
+    if (user === null) {
+      return { bounty: null, message: "User not found." }
     }
 
     if (bounty.status === BountyStatus.CLAIMED) {
@@ -170,7 +208,7 @@ export async function claimBounty(bountyId: string, userId: string): Promise<Bou
       console.debug("Sending claimed notification to poster", updatedBounty.posterId!)
       await sendNotification(
         "Bounty Claimed",
-        "Your bounty was claimed by someone",
+        `Your bounty for ${formatBountyItem(updatedBounty.item)} was claimed by ${user.name}`,
         updatedBounty.posterId!,
       )
     } catch (notificationError) {
@@ -204,7 +242,7 @@ export async function cancelBountyById(id: string): Promise<BountyWithMessage> {
         console.debug("Sending cancelled notification to claimer", updatedBounty.claimerId)
         await sendNotification(
           "Bounty Withdrawn",
-          "Your claimed bounty was withdrawn.",
+          `Your claimed bounty for ${formatBountyItem(updatedBounty.item)} was withdrawn.`,
           updatedBounty.claimerId,
         )
       } catch (notificationError) {

@@ -11,9 +11,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import type { BountyWithPartialPoster } from "@/lib/types"
-import { formatBountyItem, formatBountyStatus } from "@/lib/utils"
+import {
+  formatBountyItem,
+  formatBountyStatus,
+  formatDateTime,
+  formatDateTimeToRelative,
+  formatDeadline,
+  formatDeadlineToRelative,
+  toDateTime,
+} from "@/lib/utils"
 import { type User } from "@prisma/client"
+import { InfoIcon } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import ClaimBountyButton from "../reusable/ClaimBountyButton"
@@ -28,10 +38,24 @@ export default function BountyCard({
   const [createdAt, setCreatedAt] = useState("")
   const [deadline, setDeadline] = useState("")
 
+  const [createdAtFull, setCreatedAtFull] = useState("")
+  const [deadlineFull, setDeadlineFull] = useState("")
+
   useEffect(() => {
-    setCreatedAt(bounty.createdAt.toLocaleString())
-    setDeadline(bounty.deadline?.toLocaleString() ?? "N/A")
-  })
+    setCreatedAt(formatDateTimeToRelative(bounty.createdAt))
+    setDeadline(
+      bounty.deadline !== null
+        ? `${formatDeadlineToRelative(bounty.createdAt, bounty.deadline)} (${formatDeadline(bounty.deadline)})`
+        : "N/A",
+    )
+
+    setCreatedAtFull(formatDateTime(bounty.createdAt))
+    setDeadlineFull(
+      bounty.deadline !== null
+        ? `${formatDateTime(toDateTime(bounty.createdAt).plus({ seconds: bounty.deadline }))}`
+        : "",
+    )
+  }, [bounty])
 
   return (
     <Card>
@@ -72,12 +96,30 @@ export default function BountyCard({
           )}
           {
             <p className="text-sm">
-              <span className="font-semibold">Posted:</span> {createdAt}
+              <span className="font-semibold">Posted: </span>
+              <time dateTime={toDateTime(bounty.createdAt).toISO()}>{createdAt}</time>
+              <Tooltip>
+                <TooltipTrigger>
+                  <InfoIcon className="ml-2 inline size-4" />
+                </TooltipTrigger>
+                <TooltipContent>{createdAtFull}</TooltipContent>
+              </Tooltip>
             </p>
           }
           {bounty.deadline && (
             <p className="text-sm">
-              <span className="font-semibold">Deadline:</span> {deadline}
+              <span className="font-semibold">Deadline: </span>
+              <time
+                dateTime={toDateTime(bounty.createdAt).plus({ seconds: bounty.deadline }).toISO()}
+              >
+                {deadline}
+              </time>
+              <Tooltip>
+                <TooltipTrigger>
+                  <InfoIcon className="ml-2 inline size-4" />
+                </TooltipTrigger>
+                <TooltipContent>{deadlineFull}</TooltipContent>
+              </Tooltip>
             </p>
           )}
         </div>

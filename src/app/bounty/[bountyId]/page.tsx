@@ -1,10 +1,16 @@
-import { getBountyById } from "@/actions/bounty"
+import { getBountyByIdWithPosterAndClaimer } from "@/actions/bounty"
 import CancelBountyButton from "@/components/reusable/CancelBountyButton"
 import ClaimBountyButton from "@/components/reusable/ClaimBountyButton"
 import { Badge } from "@/components/ui/badge"
-import { formatBountyItem, formatBountyStatus } from "@/lib/utils"
+import type { BountyWithPosterAndClaimer } from "@/lib/types"
+import {
+  formatBountyItem,
+  formatBountyStatus,
+  formatDateTime,
+  formatDeadline,
+  toDateTime,
+} from "@/lib/utils"
 import getUser from "@/utils/supabase/server"
-import type { Bounty } from "@prisma/client"
 
 interface Props {
   params: Promise<{ bountyId: string }>
@@ -22,7 +28,8 @@ export default async function BountyPage({ params }: Props) {
   }
 
   const { bountyId } = await params
-  const bounty: Bounty | null = await getBountyById(bountyId)
+  const bounty: BountyWithPosterAndClaimer | null =
+    await getBountyByIdWithPosterAndClaimer(bountyId)
 
   if (!bounty) {
     return (
@@ -42,6 +49,18 @@ export default async function BountyPage({ params }: Props) {
       </div>
 
       <div className="space-y-4">
+        <div>
+          <h2 className="mb-2 text-lg font-semibold">Offered by</h2>
+          <p className="text-muted-foreground">{bounty.poster.name}</p>
+        </div>
+        {bounty.claimer && (
+          <div>
+            <h2 className="mb-2 text-lg font-semibold">Claimed by</h2>
+            <p className="text-muted-foreground">
+              {bounty.claimer.name} {bounty.claimer.id === user.id ? " (You)" : ""}
+            </p>
+          </div>
+        )}
         <div>
           <h2 className="mb-2 text-lg font-semibold">Details</h2>
           <p className="text-muted-foreground">{bounty.details || "No details provided"}</p>
@@ -63,7 +82,16 @@ export default async function BountyPage({ params }: Props) {
 
         <div>
           <h2 className="mb-2 text-lg font-semibold">Deadline</h2>
-          {/*<p className="text-muted-foreground">{deadline}</p>*/}
+          <p className="text-muted-foreground">
+            {bounty.deadline === null && "No Deadline"}
+            {bounty.deadline &&
+              `${formatDateTime(toDateTime(bounty.createdAt).plus({ seconds: bounty.deadline }))} (${formatDeadline(bounty.deadline)})`}
+          </p>
+        </div>
+
+        <div>
+          <h2 className="mb-2 text-lg font-semibold">Offered At</h2>
+          <p className="text-muted-foreground">{formatDateTime(bounty.createdAt)}</p>
         </div>
 
         <div className="mt-8 space-y-2">

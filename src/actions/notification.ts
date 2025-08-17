@@ -75,7 +75,7 @@ export async function sendNotification(title: string, message: string, userId: s
         JSON.stringify({
           title,
           body: message,
-          icon: "/icon.png",
+          icon: "/icon512_rounded.png",
         }),
       )
     } catch (error: any) {

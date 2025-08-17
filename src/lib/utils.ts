@@ -1,6 +1,8 @@
-import { Item, BountyStatus } from "@prisma/client"
+import { BountyStatus, Item } from "@prisma/client"
 import { clsx, type ClassValue } from "clsx"
+import { DateTime, Interval } from "luxon"
 import { twMerge } from "tailwind-merge"
+import { bountyStatuses, itemTypes } from "./data"
 
 export const handleError = (error: unknown) => {
   if (error instanceof Error) {
@@ -13,41 +15,43 @@ export const handleError = (error: unknown) => {
 }
 
 export const formatBountyItem = (item: Item): string => {
-  switch (item) {
-    case Item.STATIONERY:
-      return "Stationery"
-    case Item.MEDICINE:
-      return "Medicine"
-    case Item.FOOD:
-      return "Food"
-    case Item.TICKETS:
-      return "Tickets"
-    case Item.PURIFIED_WATER:
-      return "Purified Water"
-    case Item.GROCERY:
-      return "Grocery"
-    case Item.TRANSPORT:
-      return "Transport"
-    case Item.OTHER:
-      return "Other"
-    default:
-      return "Unknown Item"
-  }
+  return itemTypes[item] ?? "???"
 }
 
 export const formatBountyStatus = (status: BountyStatus): string => {
-  switch (status) {
-    case BountyStatus.OFFERED:
-      return "Offered"
-    case BountyStatus.CLAIMED:
-      return "Claimed"
-    case BountyStatus.COMPLETED:
-      return "Completed"
-    case BountyStatus.CANCELLED:
-      return "Cancelled"
-    default:
-      return "Unknown Status"
+  return bountyStatuses[status] ?? "???"
+}
+
+export const toDateTime = (date: Date) => {
+  const luxonDate = DateTime.fromJSDate(date)
+  if (!luxonDate.isValid) {
+    throw new Error(`Invalid date: ${date}`)
   }
+  return luxonDate
+}
+
+export const formatDateTime = (date: Date | DateTime) => {
+  if (date instanceof DateTime) {
+    return date.toLocaleString({ dateStyle: "medium", timeStyle: "short" })
+  }
+  return toDateTime(date).toLocaleString({ dateStyle: "medium", timeStyle: "short" })
+}
+
+export const formatDateTimeToRelative = (date: Date) => {
+  return toDateTime(date).toRelative()
+}
+
+export const formatDeadline = (deadline: number) => {
+  return Interval.fromDateTimes(DateTime.fromSeconds(0), DateTime.fromSeconds(deadline))
+    .toDuration(["days", "hours", "minutes", "second"])
+    .toHuman({
+      showZeros: false,
+      unitDisplay: "short",
+    })
+}
+
+export const formatDeadlineToRelative = (date: Date, deadline: number) => {
+  return toDateTime(date).plus({ second: deadline }).toRelative()
 }
 
 export function urlBase64ToUint8Array(base64String: string) {

@@ -65,7 +65,7 @@ model Bounty {
   details     String?      @db.Text
   reward      Int? // TIP in INR, optional
   destination String?      @db.VarChar(255) // Where to deliver the item
-  deadline    DateTime?
+  deadline    Int? // Deadline in seconds
   status      BountyStatus @default(OFFERED)
 
   poster   User   @relation("PostedBounties", fields: [posterId], references: [id])

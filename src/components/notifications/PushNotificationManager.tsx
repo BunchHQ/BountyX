@@ -69,6 +69,11 @@ export default function PushNotificationManager({ user }: { user: AuthUser }) {
       console.log("Subscribing", serializedSub, user.id)
 
       await subscribeUser(serializedSub, user.id)
+      await sendNotification(
+        "Welcome to BountyX!",
+        "Thank you for subscribing to our notifications! You will receive updates on new bounties and more.",
+        user.id,
+      )
     } catch (error) {
       console.error("Error subscribing to push notifications:", error)
     }
