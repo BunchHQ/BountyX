@@ -5,8 +5,8 @@ self.addEventListener("push", function (event) {
     console.log("Push Event Data", data)
     const options = {
       body: data.body,
-      icon: data.icon || "/icon.png",
-      badge: "/badge.png",
+      icon: data.icon || "/icon512_rounded.png",
+      badge: "/web-app-manifest-192x192.png",
       vibrate: [100, 50, 100],
       data: {
         dateOfArrival: Date.now(),
