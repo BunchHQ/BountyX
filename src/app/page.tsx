@@ -4,14 +4,14 @@ import AddNewBountyForm from "@/components/bountyboard/AddNewBountyForm"
 import BountiesList from "@/components/bountyboard/BountiesList"
 import { Button } from "@/components/ui/button"
 import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer"
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { Skeleton } from "@/components/ui/skeleton"
 import type { BountyWithPartialPoster } from "@/lib/types"
 import getUser from "@/utils/supabase/server"
@@ -50,7 +50,28 @@ export default async function HomePage() {
       <div className="prose dark:prose-invert prose-h1:mb-0 prose-p:my-2">
         <div className="flex w-full flex-row items-center justify-between">
           <h1>Bounty Board</h1>
-          <Drawer>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button size="icon" variant="default" className="text-accent size-10">
+                <PlusIcon className="size-8" />
+                <span className="sr-only">Offer a Bounty</span>
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Offer a Bounty</DialogTitle>
+                <DialogDescription>Add a new Bounty to the public board.</DialogDescription>
+              </DialogHeader>
+              <AddNewBountyForm userId={user.id} />
+              <DialogFooter>
+                <p className="text-muted-foreground text-xs">
+                  Remember: We do NOT guarantee any deadlines or rewards. Both are the sole
+                  responsibilities of the claimer and poster respectively.
+                </p>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+          {/*<Drawer>
             <DrawerTrigger asChild>
               <Button size="icon" variant="default" className="text-accent size-10">
                 <PlusIcon className="size-8" />
@@ -75,7 +96,7 @@ export default async function HomePage() {
                 </p>
               </DrawerFooter>
             </DrawerContent>
-          </Drawer>
+          </Drawer>*/}
         </div>
         <p className="text-muted-foreground">Currently active bounties</p>
         <Suspense fallback={<BountiesLoading />}>

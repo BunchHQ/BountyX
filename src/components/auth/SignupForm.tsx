@@ -191,7 +191,7 @@ export default function SignupForm() {
               <FormControl>
                 <Input
                   type="tel"
-                  placeholder="Enter your email"
+                  placeholder="Enter your phone number"
                   disabled={isPending}
                   className="bg-background"
                   {...field}
