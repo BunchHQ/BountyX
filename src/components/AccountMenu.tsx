@@ -9,18 +9,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import getUser from "@/utils/supabase/server"
 import type { User } from "@prisma/client"
-import { LayoutDashboardIcon, LogOutIcon, UserCircle, UserPen } from "lucide-react"
+import type { AuthUser } from "@supabase/supabase-js"
+import { LogOutIcon, ScrollTextIcon, UserCircle, UserIcon } from "lucide-react"
 import Link from "next/link"
 
-export default async function AccountMenu() {
-  const user = await getUser()
-
-  if (!user) {
-    return null
-  }
-
+export default async function AccountMenu({ user }: { user: AuthUser }) {
   const userData: User | null = await getUserById(user.id)
 
   if (!userData) {
@@ -45,21 +39,24 @@ export default async function AccountMenu() {
             <DropdownMenuLabel className="font-title text-lg font-bold">
               {userData.name}
             </DropdownMenuLabel>
-            <DropdownMenuLabel className="text-muted-foreground truncate text-sm">
+            <DropdownMenuLabel className="text-muted-foreground truncate py-0.5 text-sm">
               {userData.email}
+            </DropdownMenuLabel>
+            <DropdownMenuLabel className="text-muted-foreground truncate py-0.5 text-sm">
+              {userData.phone}
             </DropdownMenuLabel>
           </div>
         </div>
         <DropdownMenuSeparator className="my-1" />
         <DropdownMenuItem asChild>
           <Link href="/profile" className="cursor-pointer">
-            <UserPen />
+            <UserIcon />
             Profile
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link href="/" className="cursor-pointer">
-            <LayoutDashboardIcon />
+            <ScrollTextIcon />
             Bounty Board
           </Link>
         </DropdownMenuItem>

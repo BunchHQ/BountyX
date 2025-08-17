@@ -11,16 +11,25 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import type { BountyWithPartialPoster } from "@/lib/types"
 import { formatBountyItem, formatBountyStatus } from "@/lib/utils"
-import { type Bounty, type User } from "@prisma/client"
+import { type User } from "@prisma/client"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import ClaimBountyButton from "../reusable/ClaimBountyButton"
 
-export default function BountyCard({ bounty, user }: { bounty: Bounty; user: User }) {
+export default function BountyCard({
+  bounty,
+  user,
+}: {
+  bounty: BountyWithPartialPoster
+  user: User
+}) {
+  const [createdAt, setCreatedAt] = useState("")
   const [deadline, setDeadline] = useState("")
 
   useEffect(() => {
+    setCreatedAt(bounty.createdAt.toLocaleString())
     setDeadline(bounty.deadline?.toLocaleString() ?? "N/A")
   })
 
@@ -31,12 +40,21 @@ export default function BountyCard({ bounty, user }: { bounty: Bounty; user: Use
         <CardDescription>
           <p className="font-mono font-semibold">
             {/*<span className={`${bounty.status === BountyStatus.COMPLETED ? "text-green-600" : ""}`}>*/}
-            <Badge variant="secondary">
+            <Badge variant="secondary" className="font-medium">
               {formatBountyStatus(bounty.status).toLocaleUpperCase()}
             </Badge>
             {/*</span>*/}
           </p>
-          <p>{bounty.reward !== null && `Reward: ₹${bounty.reward}`}</p>
+          <p>
+            Offered By: <span className="font-semibold">{bounty.poster.name}</span>
+          </p>
+          <p>
+            {bounty.reward !== null && (
+              <span>
+                Reward: <span className="font-bold">₹{bounty.reward}</span>
+              </span>
+            )}
+          </p>
         </CardDescription>
         <CardAction>
           <Link href={`/bounty/${bounty.id}`}>
@@ -52,6 +70,11 @@ export default function BountyCard({ bounty, user }: { bounty: Bounty; user: Use
               <span className="font-semibold">Delivery Location:</span> {bounty.destination}
             </p>
           )}
+          {
+            <p className="text-sm">
+              <span className="font-semibold">Posted:</span> {createdAt}
+            </p>
+          }
           {bounty.deadline && (
             <p className="text-sm">
               <span className="font-semibold">Deadline:</span> {deadline}

@@ -5,6 +5,7 @@ export type BountyCreateType = Omit<
   "id" | "createdAt" | "updatedAt" | "claimerId" | "claimedAt"
 >
 export type BountyWithPoster = Bounty & { poster: User }
+export type BountyWithPartialPoster = Bounty & { poster: Partial<User> }
 export type BountyWithClaimer = BountyWithPoster & { claimer: User | null }
 export type BountyWithPosterAndClaimer = BountyWithPoster & BountyWithClaimer
 

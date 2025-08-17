@@ -179,3 +179,7 @@
     @apply bg-background text-foreground font-serif;
   }
 }
+
+@utility no-scrollbar {
+  @apply [scrollbar-width:none] [&::-webkit-scrollbar]:hidden;
+}

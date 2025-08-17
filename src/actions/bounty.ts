@@ -1,6 +1,6 @@
 "use server"
 
-import type { BountyCreateType, BountyWithMessage } from "@/lib/types"
+import type { BountyCreateType, BountyWithMessage, BountyWithPartialPoster } from "@/lib/types"
 import { db } from "@/server/db"
 import { BountyStatus, type Bounty } from "@prisma/client"
 import { revalidatePath } from "next/cache"
@@ -63,6 +63,32 @@ export async function getAllBounties(): Promise<Bounty[] | null> {
     return bounties
   } catch (error) {
     console.error("Failed to get all bounties:", error)
+    return null
+  }
+}
+
+/**
+ *
+ * @returns Array of all bounties with partial poster details
+ */
+export async function getAllBountiesWithPartialPoster(): Promise<BountyWithPartialPoster[] | null> {
+  try {
+    const bounties: Array<BountyWithPartialPoster> | null = await db.bounty.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        poster: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    })
+
+    return bounties
+  } catch (error) {
+    console.error("Failed to get all bounties with partial poster:", error)
     return null
   }
 }

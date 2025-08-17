@@ -68,8 +68,8 @@ model Bounty {
   deadline    DateTime?
   status      BountyStatus @default(OFFERED)
 
-  poster   User?   @relation("PostedBounties", fields: [posterId], references: [id])
-  posterId String?
+  poster   User   @relation("PostedBounties", fields: [posterId], references: [id])
+  posterId String
 
   claimer   User?     @relation("ClaimedBounties", fields: [claimerId], references: [id])
   claimerId String?

@@ -1,10 +1,10 @@
+import { getAllBountiesWithPartialPoster } from "@/actions/bounty"
 import { getUserById } from "@/actions/user"
 import AddNewBountyForm from "@/components/bountyboard/AddNewBountyForm"
 import BountiesList from "@/components/bountyboard/BountiesList"
 import { Button } from "@/components/ui/button"
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
@@ -13,6 +13,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer"
 import { Skeleton } from "@/components/ui/skeleton"
+import type { BountyWithPartialPoster } from "@/lib/types"
 import getUser from "@/utils/supabase/server"
 import type { User } from "@prisma/client"
 import { PlusIcon } from "lucide-react"
@@ -42,32 +43,13 @@ export default async function HomePage() {
     return <div>Error: User not Found</div>
   }
 
+  const allBounties: Array<BountyWithPartialPoster> | null = await getAllBountiesWithPartialPoster()
+
   return (
     <main className="">
-      <div className="prose dark:prose-invert prose-h1:mb-0">
+      <div className="prose dark:prose-invert prose-h1:mb-0 prose-p:my-2">
         <div className="flex w-full flex-row items-center justify-between">
           <h1>Bounty Board</h1>
-          {/*<Dialog>
-            <DialogTrigger asChild>
-              <Button size="icon" variant="default" className="text-accent size-10">
-                <PlusIcon className="size-8" />
-                <span className="sr-only">Offer a Bounty</span>
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Offer a Bounty</DialogTitle>
-                <DialogDescription>Add a new Bounty to the public board.</DialogDescription>
-              </DialogHeader>
-              <AddNewBountyForm userId={user.id} />
-              <DialogFooter>
-                <p className="text-muted-foreground text-xs">
-                  Remember: We do NOT guarantee any deadlines or rewards. Both are the sole
-                  responsibilities of the claimer and poster respectively.
-                </p>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>*/}
           <Drawer>
             <DrawerTrigger asChild>
               <Button size="icon" variant="default" className="text-accent size-10">
@@ -87,11 +69,6 @@ export default async function HomePage() {
                 </div>
               </div>
               <DrawerFooter>
-                <DrawerClose>
-                  <Button variant="outline" className="mb-4" asChild>
-                    Cancel
-                  </Button>
-                </DrawerClose>
                 <p className="text-muted-foreground mb-4 text-center text-xs">
                   Remember: We do NOT guarantee any deadlines or rewards. Both are the sole
                   responsibilities of the claimer and poster respectively.
@@ -102,7 +79,7 @@ export default async function HomePage() {
         </div>
         <p className="text-muted-foreground">Currently active bounties</p>
         <Suspense fallback={<BountiesLoading />}>
-          <BountiesList />
+          <BountiesList user={user} allBounties={allBounties} />
         </Suspense>
       </div>
     </main>

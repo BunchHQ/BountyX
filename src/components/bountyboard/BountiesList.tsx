@@ -1,36 +1,24 @@
-import { type Bounty, type User } from "@prisma/client"
+"use client"
+
+import { bountyStatusesReverse, ITEM_TYPE_ALL, itemTypesReverse, STATUS_ALL } from "@/lib/data"
+import type { BountyWithPartialPoster } from "@/lib/types"
+import { type User } from "@prisma/client"
+import { useMemo, useState } from "react"
 import BountyCard from "./BountyCard"
-import { getAllBounties } from "@/actions/bounty"
-import getUser from "@/utils/supabase/server"
-import { getUserById } from "@/actions/user"
+import BountyListFilters from "./BountyListFilters"
 
-export default async function BountiesList() {
-  const authUser = await getUser()
+interface Props {
+  user: User
+  allBounties: Array<BountyWithPartialPoster> | null
+}
 
-  if (!authUser) {
+export default function BountiesList({ user, allBounties }: Props) {
+  if (allBounties === null) {
     return (
       <div className="grid grid-cols-1 gap-4">
-        <p>Login to view bounties.</p>
-      </div>
-    )
-  }
-
-  const user: User | null = await getUserById(authUser.id)
-
-  if (!user) {
-    return (
-      <div className="grid grid-cols-1 gap-4">
-        <p>User not found.</p>
-      </div>
-    )
-  }
-
-  const allBounties: Array<Bounty> | null = await getAllBounties()
-
-  if (!allBounties) {
-    return (
-      <div className="grid grid-cols-1 gap-4">
-        <p>Unable to retrieve bounties right now. Please try again after sometime.</p>
+        <p className="text-center">
+          Unable to retrieve bounties right now. Please try again after sometime.
+        </p>
       </div>
     )
   }
@@ -38,16 +26,54 @@ export default async function BountiesList() {
   if (allBounties.length === 0) {
     return (
       <div className="grid grid-cols-1 gap-4">
-        <p>No bounties found.</p>
+        <p className="text-center">No bounties found.</p>
       </div>
     )
   }
 
+  const [selectedItemType, setSelectedItemType] = useState<string>(ITEM_TYPE_ALL)
+  const [selectedStatus, setSelectedStatus] = useState<string>(STATUS_ALL)
+
+  const filteredBounties = useMemo(() => {
+    if (selectedItemType === ITEM_TYPE_ALL && selectedStatus === STATUS_ALL) {
+      return allBounties
+    }
+
+    return allBounties.filter(b => {
+      const itemTypeMatches =
+        selectedItemType === ITEM_TYPE_ALL ? true : b.item === itemTypesReverse[selectedItemType]
+      const statusMatches =
+        selectedStatus === STATUS_ALL ? true : b.status === bountyStatusesReverse[selectedStatus]
+
+      return itemTypeMatches && statusMatches
+    })
+  }, [allBounties, selectedItemType, selectedStatus])
+
+  function handleItemTypeChange(item: string) {
+    setSelectedItemType(item)
+  }
+
+  function handleStatusChange(status: string) {
+    setSelectedStatus(status)
+  }
+
   return (
-    <div className="grid grid-cols-1 gap-4">
-      {allBounties.map(bounty => (
-        <BountyCard bounty={bounty} key={bounty.id} user={user} />
-      ))}
-    </div>
+    <>
+      <BountyListFilters
+        selectedItem={selectedItemType}
+        onItemTypeChange={handleItemTypeChange}
+        selectedStatus={selectedStatus}
+        onStatusChange={handleStatusChange}
+      />
+      <div className="grid grid-cols-1 gap-4">
+        {filteredBounties.length === 0 && (
+          <p className="text-center">No bounties found. Check the filters.</p>
+        )}
+
+        {filteredBounties.map(bounty => (
+          <BountyCard bounty={bounty} key={bounty.id} user={user} />
+        ))}
+      </div>
+    </>
   )
 }

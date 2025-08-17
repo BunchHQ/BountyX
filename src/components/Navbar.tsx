@@ -3,8 +3,8 @@ import getUser from "@/utils/supabase/server"
 import Image from "next/image"
 import Link from "next/link"
 import AccountMenu from "./AccountMenu"
-import { ColorModeToggle } from "./reusable/ColorModeToggle"
 import PushNotificationManager from "./notifications/PushNotificationManager"
+import { ColorModeToggle } from "./reusable/ColorModeToggle"
 
 const Header = async () => {
   const user = await getUser()
@@ -30,7 +30,7 @@ const Header = async () => {
           <ColorModeToggle />
           {user && <PushNotificationManager user={user} />}
           {user ? (
-            <AccountMenu />
+            <AccountMenu user={user} />
           ) : (
             <>
               <Button variant="outline" size="sm" asChild>
