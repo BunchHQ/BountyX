@@ -3,14 +3,15 @@ import AddNewBountyForm from "@/components/bountyboard/AddNewBountyForm"
 import BountiesList from "@/components/bountyboard/BountiesList"
 import { Button } from "@/components/ui/button"
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer"
 import { Skeleton } from "@/components/ui/skeleton"
 import getUser from "@/utils/supabase/server"
 import type { User } from "@prisma/client"
@@ -46,7 +47,7 @@ export default async function HomePage() {
       <div className="prose dark:prose-invert prose-h1:mb-0">
         <div className="flex w-full flex-row items-center justify-between">
           <h1>Bounty Board</h1>
-          <Dialog>
+          {/*<Dialog>
             <DialogTrigger asChild>
               <Button size="icon" variant="default" className="text-accent size-10">
                 <PlusIcon className="size-8" />
@@ -66,7 +67,38 @@ export default async function HomePage() {
                 </p>
               </DialogFooter>
             </DialogContent>
-          </Dialog>
+          </Dialog>*/}
+          <Drawer>
+            <DrawerTrigger asChild>
+              <Button size="icon" variant="default" className="text-accent size-10">
+                <PlusIcon className="size-8" />
+                <span className="sr-only">Offer a Bounty</span>
+              </Button>
+            </DrawerTrigger>
+            <DrawerContent>
+              <DrawerHeader>
+                <DrawerTitle>Offer a Bounty</DrawerTitle>
+                <DrawerDescription>Add a new Bounty to the public board.</DrawerDescription>
+              </DrawerHeader>
+
+              <div className="w-full">
+                <div className="mx-auto mt-8 max-w-3xl px-8">
+                  <AddNewBountyForm userId={user.id} />
+                </div>
+              </div>
+              <DrawerFooter>
+                <DrawerClose>
+                  <Button variant="outline" className="mb-4" asChild>
+                    Cancel
+                  </Button>
+                </DrawerClose>
+                <p className="text-muted-foreground mb-4 text-center text-xs">
+                  Remember: We do NOT guarantee any deadlines or rewards. Both are the sole
+                  responsibilities of the claimer and poster respectively.
+                </p>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
         </div>
         <p className="text-muted-foreground">Currently active bounties</p>
         <Suspense fallback={<BountiesLoading />}>
