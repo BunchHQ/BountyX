@@ -15,7 +15,7 @@ export default async function SignupPage() {
   const user = await getUser()
 
   if (user) {
-    redirect("/")
+    redirect("/app")
   }
 
   return (

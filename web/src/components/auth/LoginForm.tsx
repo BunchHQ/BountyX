@@ -54,7 +54,7 @@ export default function LoginForm() {
             throw new Error(errorMessage)
           }
 
-          router.push("/")
+          router.push("/app")
         },
         {
           loading: "Authenticating...",

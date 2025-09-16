@@ -6,14 +6,17 @@ import AccountMenu from "./AccountMenu"
 import PushNotificationManager from "./notifications/PushNotificationManager"
 import { ColorModeToggle } from "./reusable/ColorModeToggle"
 
-const Header = async () => {
+const Navbar = async () => {
   const user = await getUser()
 
   return (
     <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur">
       <div className="flex h-16 w-full items-center justify-between px-4">
         <div className="flex items-center gap-4">
-          <Link href="/" className="flex items-center justify-center space-x-2 text-xl font-bold">
+          <Link
+            href={user === null ? "/" : "/app"}
+            className="flex items-center justify-center space-x-2 text-xl font-bold"
+          >
             <Image
               src="/web-app-manifest-512x512.png"
               alt="app-icon"
@@ -47,4 +50,4 @@ const Header = async () => {
   )
 }
 
-export default Header
+export default Navbar

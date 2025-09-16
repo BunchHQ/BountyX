@@ -102,7 +102,7 @@ export default function SignupForm() {
         },
       )
 
-      redirect("/")
+      redirect("/app")
     })
   }
 

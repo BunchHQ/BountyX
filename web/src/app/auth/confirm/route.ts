@@ -3,7 +3,7 @@ import { createClient } from "@/utils/supabase/server"
 import { type EmailOtpType } from "@supabase/supabase-js"
 import { type NextRequest, NextResponse } from "next/server"
 
-const REDIRECT_AFTER_SIGNUP_PATH = "/"
+const REDIRECT_AFTER_SIGNUP_PATH = "/app"
 const ERROR_PATH = "/error"
 
 // Creating a handler to a GET request to route /auth/confirm

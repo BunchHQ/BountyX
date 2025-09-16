@@ -49,13 +49,13 @@ export default async function AccountMenu({ user }: { user: AuthUser }) {
         </div>
         <DropdownMenuSeparator className="my-1" />
         <DropdownMenuItem asChild>
-          <Link href="/profile" className="cursor-pointer">
+          <Link href="/app/profile" className="cursor-pointer">
             <UserIcon />
             Profile
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/" className="cursor-pointer">
+          <Link href="/app" className="cursor-pointer">
             <ScrollTextIcon />
             Bounty Board
           </Link>

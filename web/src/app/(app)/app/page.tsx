@@ -30,7 +30,7 @@ function BountiesLoading() {
   )
 }
 
-export default async function HomePage() {
+export default async function AppPage() {
   const authUser = await getUser()
 
   if (!authUser) {

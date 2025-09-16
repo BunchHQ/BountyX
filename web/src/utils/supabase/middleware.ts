@@ -2,7 +2,7 @@ import { env } from "@/env"
 import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
 
-const PUBLIC_PATHS = ["/login", "/signup", "/auth/confirm"]
+const APP_PATH = "/app"
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -33,12 +33,8 @@ export async function updateSession(request: NextRequest) {
   // refreshing the auth token
   const user = await supabase.auth.getUser()
 
-  // don't allow access to / for unauthenticated users expect for PUBLIC_PATHS
-  if (
-    request.nextUrl.pathname.startsWith("/") &&
-    !PUBLIC_PATHS.includes(request.nextUrl.pathname) &&
-    user.error
-  ) {
+  // don't allow access to APP_PATHS
+  if (request.nextUrl.pathname.startsWith(APP_PATH) && user.error) {
     return NextResponse.redirect(new URL("/login", request.url))
   }
 

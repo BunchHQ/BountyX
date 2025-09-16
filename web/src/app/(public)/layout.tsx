@@ -1,11 +1,7 @@
-import BottomNavigationBar, {
-  type BottomNavigationBarOptions,
-} from "@/components/BottomNavigationBar"
-import Header from "@/components/Navbar"
+import Navbar from "@/components/Navbar"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/sonner"
 import "@/styles/globals.css"
-import { ScrollTextIcon, TrophyIcon, UserIcon } from "lucide-react"
 
 import type { Metadata } from "next"
 import { IBM_Plex_Mono, Libre_Baskerville, Lora } from "next/font/google"
@@ -45,12 +41,6 @@ const ibmPlexMono = IBM_Plex_Mono({
   weight: ["400", "700"],
 })
 
-const navigationOptions: Array<BottomNavigationBarOptions> = [
-  { label: "Bounty Board", value: "/", icon: <ScrollTextIcon /> },
-  { label: "Profile", value: "/profile", icon: <UserIcon /> },
-  { label: "Hall of Fame", value: "/hall-of-fame", icon: <TrophyIcon /> },
-]
-
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html
@@ -63,9 +53,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       </head>
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableColorScheme enableSystem>
-          <Header />
+          <Navbar />
           <div className="mx-auto h-full min-h-svh w-full max-w-5xl px-8 py-16">{children}</div>
-          <BottomNavigationBar options={navigationOptions} />
           <Toaster position={"top-center"} richColors />
         </ThemeProvider>
       </body>

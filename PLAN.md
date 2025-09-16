@@ -1,7 +1,7 @@
 # Plan for the App
 
-[ ] add a landing page
-[ ] move all stuff to /app
+[ ] add a (proper) landing page
+[x] move all stuff to /app
 
 [x] Login/Signup
 [x] List Bounties
