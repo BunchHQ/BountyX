@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
+import { DownloadIcon, Loader2Icon } from "lucide-react"
 
 export default function InstallAppButton() {
   const [deferredPrompt, setDeferredPrompt] = useState<Event | null>(null)
-  const [isInstallable, setIsInstallable] = useState(false)
+  const [isInstallable, setIsInstallable] = useState<boolean | null>(null)
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e: Event) => {
@@ -29,13 +30,31 @@ export default function InstallAppButton() {
     }
   }
 
+  const buttonContents = () => {
+    if (isInstallable === true) {
+      return (
+        <>
+          <DownloadIcon size={58} />
+          Install Now
+        </>
+      )
+    } else if (isInstallable === false) {
+      return <>BountyX is not available for your browser.</>
+    } else {
+      return (
+        <>
+          <Loader2Icon className="animate-spin" />
+          Checking browser support
+        </>
+      )
+    }
+  }
+
   return (
     <>
-      {isInstallable && (
-        <Button onClick={handleInstallClick} variant={"outline"}>
-          Install App
-        </Button>
-      )}
+      <Button onClick={handleInstallClick} disabled={isInstallable !== true}>
+        {buttonContents()}
+      </Button>
     </>
   )
 }
